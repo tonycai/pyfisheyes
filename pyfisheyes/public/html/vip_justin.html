@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+ 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"> 
+<head>
+  	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> 
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" /> 
+	<link href="/css/realtime.css" rel="stylesheet" type="text/css" />
+  	<title>pyfisheyes - MAPI-Realtime</title> 
+	<meta name="keywords" content="pyfisheyes" />  
+	<meta http-equiv="refresh" content="300" />
+<style type="text/css">
+*html,*html body{background-image:url(about:blank);background-attachment:fixed;}
+
+*html .clickbar{position:absolute;right:auto;left:expression(eval(document.documentElement.scrollLeft+document.documentElement.clientWidth-this.offsetWidth)-(parseInt(this.currentStyle.marginLeft,10)||0)-(parseInt(this.currentStyle.marginRight,10)||0));}
+.alert{
+background-color:yellow;
+}
+</style>
+<script src="/jquery/js/jquery-1.4.4.min.js" type="text/javascript"></script>
+<script src="/js/jquery.cookie.js"></script>
+</head> 
+<body>
+<div class="clickbar" id="oClick">点击显示</div>
+
+<div class="wrap">	
+	<div id="rtimeHeader" style="padding-top:5px;display:none;">
+		<div class="top">
+			<p class="navbar">
+				<a href="/">首页</a>
+				<a href="/list/day">每天</a>
+				<a href="/list/hour">小时</a>
+				<a href="/list/host">分组</a>
+
+				<a href="/list/realtime">监控</a>
+				<a href="/events">事件</a>
+				<a href="/alert">报警</a>
+				<a href="/contacts">联系人</a>
+				<a href="#" onclick="javascript:void(0);">过滤</a>	
+			</p>
+
+			<!-- 头部搜索框 -->
+			<div class="searchwrap">
+					<form action="/list/realtime" class="searchform floatl">
+						<input type="hidden" name="montoring" value=1 />
+						<input type="text" name="s" value="" class="searchkey" id="searchkey" /> 
+						<input type="submit" value="搜索" />
+						<input type="button" value="撤销" onclick="window.location.href='/list/realtime?montoring'" /> 
+					</form>				
+					
+			</div>
+
+		</div>
+	</div>
+
+	<div class="chartwrap">
+		<ul class="chartlist" id="chartlist">
+			<li class="special">
+
+				<p class="chatname chatname_s">
+						<span class="sn">#485</span>
+							<span class="sn2">LB10 <span class="sword">mapi</span> Call-In</span>
+				</p>
+				<div class="imgbox">
+					<a href="/view/data/485?">
+
+					
+					<!-- <img alt="LB10 MAPI Call-In" src="/view/realtimegraph/485?host=/1.png"/>  -->
+					
+					<img class="special" src="/view/realtimegraph/485/1.png?vip_justin" alt="LB10 MAPI Call-In">
+					</a>
+				</div>
+			</li>
+			<li class="special">
+
+				<p class="chatname chatname_s">
+						<span class="sn">#491</span>
+							<span class="sn2">LB10 <span class="sword">mapi</span>:JsonView Request</span>
+				</p>
+				<div class="imgbox">
+					<a href="/view/data/491">
+					
+					<!-- <img alt="LB10 MAPI:JsonView Request" src="/view/realtimegraph/491?host=/1.png"/>  -->
+
+					
+					<img class="special" src="/view/realtimegraph/491/1.png?vip_justin" alt="LB10 MAPI:JsonView Request">
+					</a>
+				</div>
+			</li>
+			<li class="special">
+				<p class="chatname chatname_s">
+						<span class="sn">#127</span>
+							<span class="sn2">LB11 S 实时请求</span>
+				</p>
+				<div class="imgbox">
+					<a href="/view/data/127">
+					
+					<!-- <img alt="LB11 S 实时请求" _lazysrc="/view/realtimegraph/127?host=/1.png"/>  -->
+					
+					<img class="special" alt="LB11 S 实时请求" src="/view/realtimegraph/127/1.png?vip_justin">
+					</a>
+				</div>
+			</li>
+		</ul>
+	</div>
+</div>
+<script type="text/javascript"> 
+	$("document").ready(function(){
+		slide();
+			$("#oClick").click(function(){
+					if($("#rtimeHeader").css("display") == "none")
+					{
+						$("#rtimeHeader").slideDown();
+					    $(this).html("点击显示");
+					    $.cookie('sk','true');
+					}
+					else
+					{
+						$("#rtimeHeader").slideUp();
+					    $(this).html("点击隐藏");
+					    $.cookie('sk','false');
+					}
+				});
+			
+	});
+	function slide(){
+		
+		if($.cookie('sk') == 'true')
+				$("#rtimeHeader").show();
+		else
+				$("#rtimeHeader").hide();
+	}
+	
+</script> 
+</body>
+</html>

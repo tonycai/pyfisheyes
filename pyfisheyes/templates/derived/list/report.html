@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>report</title>
+<link type="text/css" href="/jquery/css/pepper-grinder/jquery-ui-1.8.8.custom.css" rel="stylesheet" />
+<link href="/css/report.css" media="all" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/jquery/js/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="/jquery/js/jquery-ui-1.8.8.custom.min.js"></script>
+<script src="/js/CJL.0.1.min.js"></script>
+<script src="/js/LazyLoad.js"></script>
+<script src="/js/lazyLoadImg.js"></script>
+<script type="text/javascript">
+$(function(){
+	$( "#datepicker" ).datepicker({
+	altFormat: 'yy-mm-dd',
+	altField: '#actualDate',
+	onSelect: function(dateText, inst) { 
+	var oDate = $("#actualDate").val();
+			location.href = "/daily_report/lookup_system?odate="+oDate;
+		}
+	});
+});
+</script>
+</head>
+<body>
+	<div class="wrap">
+		<div class="header">
+			<a href="#" class="logo"><img src="/img/logo2.png" alt="logo" height="50px"/></a>
+			<ul class="nav">
+				<li><a href="/" class="active">首页</a></li>
+				<li><a href="/list/day">每天</a></li>
+				<li><a href="/list/hour">小时</a></li>
+				<li><a href="/list/host">分组</a></li>
+				<li><a href="/list/realtime">监控</a></li>
+				<li><a href="/speed" style="dsiplay:none;">速度</a></li>
+				<li><a href="/events">事件</a></li>
+				<li><a href="/alert">报警</a></li>
+				<li><a href="/contacts">联系人</a></li>
+			</ul>
+		</div>
+		<p class="pageguide"><a href="/">首页</a>&nbsp;&gt;&gt;&nbsp;<a href="/list/realtime">监控</a>&nbsp;&gt;&gt;&nbsp;<span>Report</span>&nbsp;&gt;&gt;&nbsp;${c.odate}</p>
+		<div class="main">
+			<div class="main_left" id="chartwrap">
+			% for x,t in enumerate(c.rows):
+				<dl class="dl1">
+					<dt>${x+1}) ${t.typename} #${t.typeid}</dt>
+					<dd style="display:none;">同比上周同一天上涨:169%</dd>
+					<dd class="dd2"><a href="/list/realtime?viewmdays&typeid=${t.typeid}&typename=${t.typename}&odate=${c.odate}" style="display:inline-block;width:660px;background-color:#fff;text-align:center;"><img class="lazyimage" _lazysrc="/view/graph/${t.typeid}/0/2011-04-28/${c.odate}/1.png" alt="${t.typename}" /></a></dd>
+				</dl>
+			% endfor
+			</div>
+			
+			<div class="main_right">
+				<div class="slidebar">	
+					<h3 class="sbartitle">Search</h3>	
+					<form method="get" action="/list/realtime?montoring">
+					<input type="hidden" value="1" name="fullscreen">		
+						<input type="text" value="" name="s">		
+						<input type="submit" value="Go">
+					</form>
+				</div>
+				<div class="slidebar datepicker">
+					<div id="datepicker"></div>
+					<input type="hidden" id="actualDate" />
+				</div>
+			</div>
+		</div>
+	</div>
+<script>
+function lazy(){
+var lazy = new ImagesLazyLoad({
+		container: window, mode: "vertical",
+		holder: "/img/o_dot.gif"
+	});
+}
+lazy();
+</script>
+<div id="toUp"></div>>
+</body>
+</html>

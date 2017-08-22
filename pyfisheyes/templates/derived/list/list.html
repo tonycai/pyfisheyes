@@ -1,0 +1,67 @@
+<%inherit file="/base/index.html"/>
+<%namespace name="pagination" file="/component/pagination.html" import="*" />
+
+<%def name="heading()"><h1 class="heading">${c.pagename}</h1></%def>
+<%def name="title()">${c.pagename}</%def>
+
+<table class="atable" cellspacing="0" border="0" cellpadding="0">
+% for x,category in enumerate(c.rows):
+	<tr>
+		<td class="first">${x+1}</td>
+		<td> <a href="${h.url_for('/view/data/'+ str(category.typeid))}">${category.typename}</a></a></td>
+		<td class="last"><a href="/view/data/${category.typeid}">${"view"}</a></td>
+	</tr>
+% endfor
+</table>
+
+${pagination.pagin(c, False)}
+
+<%def name="toolbox()">
+% if c.pagename == "realtime":
+   <div class="slidebar">	
+		<h3 class="sbartitle">${"Search"}</h3>	
+		<form action="/list/realtime?montoring" method="get">
+		<input type="hidden" name="fullscreen" value=1 />		
+			<input type="text" name="s" value="" />		
+			<input type="submit" value="Go" />
+	
+		</form>
+	</div>
+	
+	<div class="slidebar">	
+			<h3 class="sbartitle">${"usefully"}</h3>
+			<p>
+				<a href="/list/realtime?fullscreen=1&s=mysql">mysql</a> 
+				<a href="/list/realtime?fullscreen=1&s=vpn">vpn</a>
+				<a href="/list/realtime?fullscreen=1&s=ct">ct</a>
+				<a href="/list/realtime?fullscreen=1&s=cnc">cnc</a>
+				<a href="/list/realtime?fullscreen=1&s=cdn">cdn</a> 
+				<a href="/list/realtime?fullscreen=1&s=solr">solr</a>
+				<a href="/list/realtime?fullscreen=1&s=实时请求">实时请求</a>  
+				<a href="/list/realtime?fullscreen=1&s=慢请求">实时慢请求</a>  
+				<a href="/list/realtime?fullscreen=1&s=connections">connections</a>
+				<a href="/list/realtime?fullscreen=1&s=cache">cache</a>
+				<a href="/list/realtime?fullscreen=1&s=release">release</a>
+				<a href="/list/realtime?fullscreen=1&s=yoursite">yoursite</a>  
+				<a href="/list/realtime?fullscreen=1&s=yoursite1">yoursite1</a>  
+				<a href="/list/realtime?fullscreen=1&s=yoursite2">yoursite2</a>  
+				<a href="/list/realtime?fullscreen=1&s=500">500</a>  
+			</p>
+	</div>
+%endif
+
+	<div class="slidebar">
+		<h3 class="sbartitle">工具箱</h3>
+		<ul class="sbarlist">
+			% if c.pagename == "realtime":
+			<li><a href="/list/realtime?montoring" title="每分钟刷新一次" >监控模式</a></li>
+			<li><a href="/list/realtime?fullscreen" title="不刷新" >全屏模式</a></li>
+			<li style="display:none;"><a href="/list/realtime?report" title="Report">Report</a></li>
+			<li><a href="/daily_report/lookup_system" title="Report">Report</a></li>
+			<li><a href="/html/vip_justin.html" title="">vip_Justin</a></li>
+			<li><a href='/list/realtime?fullscreen=1&s=%E4%BD%8D%E7%BD%AE' target="_blank">位置监控</a></li>
+			% endif
+		</ul>
+	</div>
+
+</%def>

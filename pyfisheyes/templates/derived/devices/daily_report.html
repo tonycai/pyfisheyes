@@ -1,0 +1,273 @@
+<%inherit file="/base/index.html"/>
+<%namespace name="navigation" file="/component/navigation.html" import="*" />
+<%def name="style()">
+			<style type="text/css">
+			#chartwrap dl{
+			border:none;
+			}
+			</style>
+</%def>	
+		
+<%def name="linkguide()">
+		<p class="pageguide">
+			<a href="/">首页</a>&nbsp;&gt;&gt;&nbsp;<a href="/devices">主机</a>&nbsp;&gt;&gt;&nbsp;
+			<span id="oname">
+			% if hasattr(c,'ditem'):
+				${c.ditem}
+			% else:
+				${c.info['hostname']}
+			% endif
+			</span>
+			<a href="/devices/deviceaddhtml?edit&id=${c.info['id']}">
+			[编辑]
+			</a>
+		</p>
+</%def>	
+		
+	
+			<div class="devicechartlist" id="chartwrap">
+			<div class='deviceinfo' style="position:relative">
+			
+			        <table cellspacing=0 cellpadding = 0 border =0 id="deviceinfo" style="">
+			        
+			        <tr><th width="80">主机名：</th><td width="280">${c.info['hostname']}</td><th width="80">IP：</th><td><a style='color:red;' href="http://${c.info['inetaddr'][0]}:27012/shockwave?f=html">${c.info['inetaddr'][0]}</a></td></tr>
+			        <tr><th>CPU：</th><td>${c.info['cpuinfo']}</td><th>内存：</th><td>${c.info['memsize']}</td></tr>
+			        <tr><th>型号：</th><td>${c.info['hardware']}</td><th>磁盘：</th><td>${c.info['diskspace']}</td></tr>
+			        <tr><th>内核：</th><td>${c.info['kernel_info']}</td><th height="38">所有者：</th>
+			        <td>
+			        %if c.info['customer']:
+			        <span id='customer'>${c.info['customer']}</span> <span id='customerEdit' style='text-decoration:underline;color:#ccc;cursor:pointer'>点击修改</span></td>
+			        %else:
+			        <span id='customerEdit' style='text-decoration:underline;color:#ccc;cursor:pointer'>点击添加</span>
+			        %endif
+			        </tr>
+			        <tr><th height = "75">备注：</th>
+			        
+			        <td colspan='3'>
+			        %if c.info['notes']:
+			        
+			        <span id='notes'>${c.info['notes']}</span> <span id='notesEdit' style='text-decoration:underline;color:#ccc;cursor:pointer'>点击修改</span>
+			        %else:
+			        <span id='notesEdit' style='text-decoration:underline;color:#ccc;cursor:pointer'>点击添加</span>
+			        %endif
+			        </td></tr>
+			        </table>
+			       <button id="slide" type='button' style="cursor:pointer;position:absolute;top:0;right:0;width:32px;height:32px;padding:0;margin:0;background:url('/img/up1.png') no-repeat 0 0px transparent;border:0;"></button>
+			</div>
+			%if c.pagename == 'deviceitems':
+			
+					% for x,t in enumerate(c.rows):
+					%if c.rows[x]:
+						<dl class="dl1 floatl" id="${t.id}">
+							<dt>${x+1}) ${t.ditem}</dt>
+							<dd class="dd2 floatl">
+								<img id='img_${x+1}' src="/devices/viewData/${t.id}/${c.items[x]}/${t.dname}/${c.date}/11.png" />
+								<a class='cmp' href="/devices/cmpItem?id=${t.id}&item=${c.items[x]}&d=${c.date}&sn=${c.info['serial_no']}&dn=${c.info['hostname']}" title="对比"></a>
+								<a class='top' href="#" title="顶部"></a>
+							</dd>	
+						</dl>
+					%endif
+					% endfor
+			%endif
+			%if c.pagename == 'cmpitem':
+				% for date,weekday in c.dds:
+					
+						<dl class="dl1 floatl" >
+							<dt>${date} ${weekday}</dt>
+							<dd class="dd2 floatl">
+								<img src="/devices/viewData/${c.id}/${c.item}/${c.info['hostname']}/${date}/11.png" />
+							
+							</dd>	
+						</dl>
+
+					% endfor
+			%endif
+			</div>
+			
+
+
+<%def name="bodyscript()">
+<script type="text/javascript" src="/jquery/js/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="/jquery/js/jquery-ui-1.8.8.custom.min.js"></script>
+<script type="text/javascript" src="/js/CJL.0.1.min.js"></script>
+<script type="text/javascript" src="/js/LazyLoad.js"></script>
+<script type="text/javascript" src="/js/lazyLoadImg.js"></script>
+%if c.pagename == 'deviceitems':
+<script type="text/Javascript" src="/js/cdjcv.js"></script>
+
+<script>
+// 实更新图片，一分钟更新一次
+function updateDisplay()
+{
+    if (window.JsChartViewer)
+        for(x=1; x<=${c.total};x++)
+        JsChartViewer.get('img_'+x).streamUpdate();
+}
+window.setInterval("updateDisplay()", 60000);
+</script>
+%endif
+<script type="text/javascript">
+$(function(){
+	var oDate
+	var defaultdate = "${c.date}"
+	var kw = ''
+	var dns=''
+	var dn=''
+	if (document.getElementById("kw"))
+		kw = $("#kw").val()
+	if (document.getElementById("dsn"))
+		dsn = $("#dsn").val()
+	if (document.getElementById("dn"))
+		dn = $("#dn").val()
+	
+	$( "#datepicker" ).datepicker({
+		altFormat: 'yy-mm-dd',
+		altField: '#actualDate',
+		onSelect: function(dateText, inst) { 
+				oDate = $("#actualDate").val();
+				if(kw)
+					location.href = "/devices/deviceItems?kw="+kw+"&d="+oDate;
+					
+				else
+					location.href = "/devices/deviceItems?dsn="+dsn+"&dn="+dn+"&d="+oDate;
+				    
+		},
+		dateFormat: 'yy-mm-dd',
+		defaultDate:defaultdate
+		
+	});
+	$("#slide").toggle(function(){
+		$('#deviceinfo').fadeOut()
+		$(this).css("background-image","url('/img/down.png')")
+		//$(this).text("主机信息显示")
+				
+		},function(){
+			$('#deviceinfo').fadeIn()
+			$(this).css("background-image","url('/img/up1.png')")	
+			//$(this).text("主机信息隐藏")	
+		});
+	// 修改备注
+	$('#notesEdit').live('click',function(){
+		textvalue = $('#notes').text()
+		$(this).before("<textarea id='addnotes' style='width:70%;height:50px;'>"+textvalue+"</textarea>")
+		$('#notes').remove();
+		$(this).remove();
+		$('#addnotes').focus();
+	});
+	$('#addnotes').live('blur',function(){
+		va = $(this).val()
+		td = $(this).parent('td')
+		if(va != ''){
+			  
+			$.ajax({
+					url:"/devices/editdeviceinfo",
+					data:"sn=${c.info['serial_no']}&notes="+va,
+					success:function(html){
+						if(html)
+						{ 
+							$(td).append("<span id='notes'>"+html+"</span> <span id='notesEdit' style='text-decoration:underline;color:#ccc;cursor:pointer'>点击修改</span>")	
+						}
+					}
+		
+				   });
+		}
+		else{
+				$(this).before("<span id='notesEdit' style='text-decoration:underline;color:#ccc;cursor:pointer'>点击添加</span>")
+			}
+		$(this).remove()
+
+		
+     });
+	//修改所有者
+	$('#customerEdit').live('click',function(){
+		textvalue = $('#customer').text()
+		$(this).before("<input type='text' value='"+textvalue+"' id='addcustomer' />")
+		$('#customer').remove()
+		$(this).remove();
+		$('#addcustomer').focus()
+	});
+	$('#addcustomer').live('blur',function(){
+		va = $(this).val()
+		td = $(this).parent('td')
+		if(va != ''){
+			  
+			$.ajax({
+					url:"/devices/editdeviceinfo",
+					data:"sn=${c.info['serial_no']}&customer="+va,
+					success:function(html){
+						if(html)
+						{ 
+							$(td).append("<span id='customer'>"+html+"</span> <span id='customerEdit' style='text-decoration:underline;color:#ccc;cursor:pointer'>点击修改</span>")	
+						}
+					}
+		
+				   });
+		}
+		else{
+				$(this).before("<span id='customerEdit' style='text-decoration:underline;color:#ccc;cursor:pointer'>点击添加</span>")
+			}
+		$(this).remove()
+
+		
+     });
+    
+});
+</script>
+</%def>
+
+
+<%def name="profile()">
+    <div class="welcome">
+    	% if not request.environ.get('REMOTE_USER'):
+	  		<a href="/signin" class="login">登录</a>
+		% else:
+	  		你好，${request.environ['REMOTE_USER']} <a href="/signout">退出</a> | <a href="/template">配置</a> 
+		% endif
+    </div>
+</%def>
+<%def name="toolbox()">
+				%if c.pagename == 'deviceitems':
+				
+				<div class="slidebar">	
+						<h3 class="sbartitle">快速搜索</h3>	
+						<form action="/devices" method="get">		
+						<input type="text" name="ds" value="" />		
+						<input type="submit" value="Go" />
+						</form>
+				</div>
+				<div class="slidebar">	
+						<h3 class="sbartitle">工具栏</h3>
+						<ul class="sbarlist">
+							
+							<li><a target='_blank' href="/devices/devicerealtime">雷达II</a></li>
+						</ul>
+				</div>
+				
+			%endif
+				<div class="slidebar datepicker">
+					<div id="datepicker"></div>
+					<input type="hidden" id="actualDate" />
+					% if hasattr(c,'kw'):
+						<input type="hidden" name="kw" id="kw" value="${c.kw}">
+					% endif
+					% if hasattr(c,'info'):
+						<input type="hidden" name="kw" id="dsn" value="${c.info['serial_no']}">
+					% endif
+					% if hasattr(c,'info'):
+						<input type="hidden" name="kw" id="dn" value="${c.info['hostname']}">
+					% endif
+				</div>
+			  %if c.pagename == 'deviceitems':
+			  <div class="slidebar">	
+						<h3 class="sbartitle">快速定位</h3>
+						<ul class="sbarlist">
+							% for x,t in enumerate(c.rows):
+							%if c.rows[x]:
+							<li><a href="#${t.id}">${t.ditem}</a></li>
+							%endif
+							% endfor
+						</ul>
+				</div>
+			   
+			   %endif
+</%def>

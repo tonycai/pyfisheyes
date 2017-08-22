@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"> 
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> 
+</head>
+<body>
+<form name='form' action="/add/index" method="post">
+类型：<select name="otype"><option value="1">监控</option><option value="2">主机</option></select><br />
+数据类型:<input name="dtype" value="2" type="text" /><br />
+项目：<input type="hidden" name="ditem" value='abc1' /><br />
+机器名称:<input name="dname" value="" type="text" /><br />
+机器sn:<input name="dsn" value="" type="text" /><br />
+日期时间：<input name="odatetime" type="text" /><br />
+值：<input name="ovalue" type="text" /><br />
+<input type="submit" value="提交"/>
+</form>
+</body>
+</html>

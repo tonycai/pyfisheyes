@@ -1,0 +1,25 @@
+<%inherit file="/base/index.html"/>
+
+<%def name="title()">Sign In</%def>
+<%def name="heading()"><h1 class="heading">Sign In</h1></%def>
+
+<%doc>
+${h.form_start('%s', method="post")}
+    ${h.field(
+        "Username",
+        h.text(name='username'),
+    )}
+    ${h.field(
+        "Password",
+        h.password(name='password'),
+    )}
+    ${h.field(field=h.submit(value="Sign in", name='submit'))}
+${h.form_end()}
+</%doc>
+<!-- ${h.form_start('%s', method="post")}-->
+<form class="signinform" action="/signin" method="post">
+	<div><label for="username"> Username:</label><input id="username" name="username" type="text" /></div>
+	<div><label for="password"> Password:</label><input id="password" name="password" type="password" /></div>
+	<div><input id="submit" name="submit" type="submit" value="Sign in" /></div>
+</form>
+

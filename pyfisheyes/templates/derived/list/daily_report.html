@@ -1,0 +1,194 @@
+<%inherit file="/base/index.html"/>
+<%namespace name="navigation" file="/component/navigation.html" import="*" />
+<%def name="head_tags()">
+<script type="text/javascript" src="/jquery/js/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="/jquery/js/jquery-ui-1.8.8.custom.min.js"></script>
+<script type="text/javascript" src="/js/CJL.0.1.min.js"></script>
+<script type="text/javascript" src="/js/LazyLoad.js"></script>
+<script type="text/javascript" src="/js/lazyLoadImg.js"></script>
+</%def>
+<%def name="script()">
+<script type="text/javascript">
+$(function(){
+	var sr  = '${c.sr}'
+	var oDate
+	var defaultdate = $("#odate").text()
+	$( "#datepicker" ).datepicker({
+		altFormat: 'yy-mm-dd',
+		altField: '#actualDate',
+		onSelect: function(dateText, inst) { 
+				oDate = $("#actualDate").val();
+				if(sr)
+					location.href = "/daily_report/lookup_system?odate="+oDate+'&sr='+sr;
+				else
+					location.href = "/daily_report/lookup_system?odate="+oDate;
+		},
+		dateFormat: 'yy-mm-dd',
+		defaultDate:defaultdate
+		
+	});
+	$("#clearcache").click(function(){
+		location.href = "/daily_report/lookup_system?odate=${c.odate}&cr=cr";
+	});
+	$("#disabledlazy").click(function(){
+		location.href = "/daily_report/lookup_system?odate=${c.odate}&unlazy=unlazy";
+	});
+	$("#sort").change(function(){
+			var sort = $(this).val();
+			location.href='/daily_report/lookup_system?sort='+sort;
+		});
+	
+});
+</script>
+</%def>
+<%def name="linkguide()">
+		<p class="pageguide">
+			<a href="/">首页</a>&nbsp;&gt;&gt;&nbsp;<a href="/list/realtime">监控</a>&nbsp;&gt;&gt;&nbsp;<span>Report</span>&nbsp;&gt;&gt;&nbsp;<span id="odate">${c.odate}</span>
+		</p>
+</%def>
+			<div id="chartwrap">
+			%if c.simp == 0:
+				% if c.sitems:
+					% for x,t in enumerate(c.sitems):
+					<dl class="dl1 floatl"">
+						<dt>${x+1}) ${t[1]} #${t[2]}</dt>
+						<dd>${t[3]} <strong>${t[7]}%</strong>&nbsp;&nbsp;<span>总计：</span><strong>${t[8]}</strong></dd>
+						<dd>时间范围：${t[4]} - ${t[5]}</dd>
+						<dd class="dd2 floatl">
+								% if c.disabledlazy:
+								
+								<a class="largeimg floatl" href="/view/data/${t[2]}?d2=${t[5][0:10]}"><img src="${c.imgpath}/view/graph/${t[2]}/0/${t[4][0:10]}/${t[5][0:10]}/1.png" alt="${t[1]}" /></a>
+								% else:
+			
+								<a class="largeimg floatl" href="/view/data/${t[2]}?d2=${t[5][0:10]}"><img _lazysrc="${c.imgpath}/view/graph/${t[2]}/0/${t[4][0:10]}/${t[5][0:10]}/1.png" alt="${t[1]}" /></a>
+								% endif 
+								
+							
+							<p class="fguide">
+									<a class="fl a1" href="/list/realtime?viewmdays&typeid=${t[2]}&typename=${t[1]}&odate=${t[5][0:10]}" title="对比">对比</a>
+									<a class="fl a2" href="${c.imgpath}/view/graph2/${t[2]}/0/${t[5][0:10]}/7126x350/2.png" title="放大">放大</a>
+									<a class="fl a3" href="/view/data/${t[2]}?d2=${t[5][0:10]}" title="单页">单页</a>
+								
+								</p>
+						</dd>
+					</dl>
+					
+					% endfor
+				% else:
+					% for x,t in enumerate(c.items):
+					<dl class="dl1 floatl"">
+						<dt>${x+1}) ${t[1]} #${t[2]}</dt>
+						<dd>${t[3]} <strong>${t[7]}%</strong>&nbsp;&nbsp;<span>总计：</span><strong>${t[8]}</strong></dd>
+						<dd>时间范围：${t[4]} - ${t[5]}</dd>
+						<dd class="dd2 floatl">
+								% if c.disabledlazy:
+								
+								<a class="largeimg floatl" href="/view/data/${t[2]}?d2=${t[5][0:10]}"><img src="${c.imgpath}/view/graph/${t[2]}/0/${t[4][0:10]}/${t[5][0:10]}/1.png" alt="${t[1]}" /></a>
+								% else:
+			
+								<a class="largeimg floatl" href="/view/data/${t[2]}?d2=${t[5][0:10]}"><img _lazysrc="${c.imgpath}/view/graph/${t[2]}/0/${t[4][0:10]}/${t[5][0:10]}/1.png" alt="${t[1]}" /></a>
+								% endif 
+								
+							
+							<p class="fguide">
+									<a class="fl a1" href="/list/realtime?viewmdays&typeid=${t[2]}&typename=${t[1]}&odate=${t[5][0:10]}" title="对比">对比</a>
+									<a class="fl a2" href="${c.imgpath}/view/graph2/${t[2]}/0/${t[5][0:10]}/7126x350/2.png" title="放大">放大</a>
+									<a class="fl a3" href="/view/data/${t[2]}?d2=${t[5][0:10]}" title="单页">单页</a>
+								
+								</p>
+						</dd>
+					</dl>
+					
+					% endfor
+				% endif
+			%endif
+			
+			
+			%if c.simp == 1 :
+				%if c.srows:
+					% for x,t in enumerate(c.srows):
+				
+					<dl class="dl1 floatl">
+						<dt>${x+1}) ${t.typename} #${t.typeid}</dt>
+						<dd class="dd2 floatl">
+						
+	                                % if c.disabledlazy:
+							<a class="largeimg floatl" href="/view/data/${t.typeid}"><img src="${c.imgpath}/view/graph/${t.typeid}/0/0000-00-00/${c.odate}/1.png" alt="${t.typename}" /></a>
+		                               %else:
+							<a class="largeimg floatl" href="/view/data/${t.typeid}"><img _lazysrc="${c.imgpath}/view/graph/${t.typeid}/0/0000-00-00/${c.odate}/1.png" alt="${t.typename}" /></a>
+	                               %endif
+							<p class="fguide">
+								<a class="fl a1" href="/list/realtime?viewmdays&typeid=${t.typeid}&typename=${t.typename}&odate=${c.odate}" title="对比">对比</a>
+								<a class="fl a2" href="${c.imgpath}/view/graph2/${t.typeid}/0/${c.odate}/7126x650/2.png" title="放大">放大</a>
+								<a class="fl a3" href="/view/data/${t.typeid}" title="单页">单页</a>
+								
+							</p>
+						</dd>	
+					</dl>
+					% endfor
+				%else:
+					% for x,t in enumerate(c.rows):
+				
+					<dl class="dl1 floatl">
+						<dt>${x+1}) ${t.typename} #${t.typeid}</dt>
+						<dd class="dd2 floatl">
+						
+	                                % if c.disabledlazy:
+							<a class="largeimg floatl" href="/view/data/${t.typeid}"><img src="${c.imgpath}/view/graph/${t.typeid}/0/0000-00-00/${c.odate}/1.png" alt="${t.typename}" /></a>
+		                               %else:
+							<a class="largeimg floatl" href="/view/data/${t.typeid}"><img _lazysrc="${c.imgpath}/view/graph/${t.typeid}/0/0000-00-00/${c.odate}/1.png" alt="${t.typename}" /></a>
+	                               %endif
+							<p class="fguide">
+								<a class="fl a1" href="/list/realtime?viewmdays&typeid=${t.typeid}&typename=${t.typename}&odate=${c.odate}" title="对比">对比</a>
+								<a class="fl a2" href="${c.imgpath}/view/graph2/${t.typeid}/0/${c.odate}/7126x650/2.png" title="放大">放大</a>
+								<a class="fl a3" href="/view/data/${t.typeid}" title="单页">单页</a>
+								
+							</p>
+						</dd>	
+					</dl>
+					% endfor
+				%endif
+			%endif
+			</div>
+			
+			<%def name="toolbox()">
+				<div class="slidebar">	
+					<h3 class="sbartitle">Search</h3>	
+					<form method="get" action="/daily_report/lookup_system" >
+						<input type="hidden" name = 'odate' value="${c.odate}"/>
+						<input type="text" value="${c.sr}" name="sr" id='sr'>		
+						<input type="submit" value="Go" />
+					</form>
+				</div>
+				<div class="slidebar datepicker">
+					<div id="datepicker"></div>
+					<input type="hidden" id="actualDate" />
+				</div>
+				<div style="display:none;" id="clearcache" class="clearcache">清除缓存</div>
+				<div id="disabledlazy" class="disabledlazy">禁用延载图片</div>
+				<div style="clear:both;padding-left:15px;padding-top:5px;">按 <select id="sort" style="width:100px;"><option value=""></option><option value="3">图片权重</option><option value="1">图片ID升序</option><option value="2">图片ID降序</option></select> 排序</div>
+			</%def>
+<%def name="bodyscript()">
+
+%if not c.disabledlazy:
+<script type="text/javascript">
+function lazy(){
+var lazy = new ImagesLazyLoad({
+		container: window, mode: "vertical",
+		holder: "/img/o_dot.gif"
+	});
+}
+lazy();
+</script>
+%endif
+</%def>
+
+<%def name="profile()">
+    <div class="welcome">
+    	% if not request.environ.get('REMOTE_USER'):
+	  		<a href="/signin" class="login">登录</a>
+		% else:
+	  		你好，${request.environ['REMOTE_USER']} <a href="/signout">退出</a> | <a href="/template">配置</a> 
+		% endif
+    </div>
+</%def>

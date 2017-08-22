@@ -1,0 +1,39 @@
+<%def name="bar(url, mode)">
+<div class="searchwrap">
+		<p style="float:left;line-height:20px;"><input type="checkbox" id="disreflash" style="vertical-align:middle;" name="disrf" />&nbsp;<lable for="disreflash" style="color:#990000;">禁止刷新</lable>&nbsp;</p>
+		<form action="${url}" class="searchform floatl">
+			<input type="hidden" name="${mode}" value=1 />
+			<input type="text" name="s" value="${c.sw}" class="searchkey" id="searchkey" /> 
+			<input type="submit" value="搜索" />
+			% if c.sw:
+			<input type="button" value="撤销" onclick="window.location.href='${url}?${mode}'" /> 
+			% endif
+		</form>				
+		<p class="hotkey floatl">
+			热点: 
+			<a href="/list/realtime?${mode}=1&s=dfs">dfs</a> 
+			<a href="/list/realtime?${mode}=1&s=my">my</a> 
+			<a href="/list/realtime?${mode}=1&s=cache">cache</a> 
+			<a href="/list/realtime?${mode}=1&s=500">500</a>
+			<a href="/list/realtime?${mode}=1&s=solr">solr</a> 
+		</p>
+		<div class="clear"></div>
+</div>
+</%def>
+
+<%def name="device_finder(url, met, w)">
+<div class="slidebar">
+     <h3 class="sbartitle">快速查找</h3>
+     <form action="${url}" method="${met}">
+       <input id="skey" type="text" name="ds" value="${w}" style="color:#ccc;" />
+       <input type="submit" value="查找" />
+     </form>
+</div>
+        <div class="slidebar">
+          <h3 class="sbartitle">工具栏</h3>
+          <ul class="sbarlist">
+           <li><a href="/devices/devicerealtime?item=loadavg&hn=">雷达II</a></li>
+           <li><a href="/devices/deviceaddhtml">添加主机</a></li>
+          </ul>
+        </div>
+</%def>

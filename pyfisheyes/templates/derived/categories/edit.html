@@ -1,0 +1,249 @@
+<%inherit file="/base/index.html" />
+
+<%def name="heading()">
+  <h1>${c.heading}</h1>
+</%def>
+
+<%def name="toolbox()">
+<div class="box">
+
+<h3>toolbox</h3>
+
+<ul>
+	<li><a href="/categories/add">new template</a></li>
+</ul>
+
+</div>
+
+</%def>
+
+<form action="/categories/${c.action}" method="post">
+<table style="width:100%;border: 1px solid #ccc;">
+<tr>
+    <td colspan="2" style="text-align:center;background-color:#eee;"><strong>${u"基础信息"}</strong></td>
+</tr>
+<tr>
+    <td class="tab_td1">${u"名称"}</td><td><input type="text" name="typename" value='${c.cate.typename}' class="input_text" /></td>
+</tr>
+<tr>
+    <td class="tab_td1">${u"类名"}</td><td><input type="text" name="classname" value='${c.cate.classname}' class="input_text" /> </td>
+</tr>
+
+<tr>
+    <td class="tab_td1">${u"数据项"}</td><td><input type="text" name="items" value='${c.cate.items}' class="input_text" /> </td>
+</tr>
+<tr>
+    <td class="tab_td1">${u"图标题"}</td><td><input type="text" name="titles" value='${c.cate.titles}' class="input_text" /> </td>
+</tr>
+<tr>
+    <td class="tab_td1">${u"显示天数"}</td><td>
+    <select  id="labels" name="labels">
+% for labels in c.labels:
+	% if labels == c.cate.labels:
+  		<option value="${labels}" selected="selected">${labels}</option>
+  	% else:
+  		<option value="${labels}">${labels}</option>
+  	% endif
+% endfor
+</select>
+    </td>
+</tr>
+<tr>
+    <td class="tab_td1">${u"隐藏"}</td><td>
+    % if c.cate.disable == 0:
+	    <input type="radio" name="disable" value="0" checked> No
+		<input type="radio" name="disable" value="1"> Yes	
+    % else:
+    	    <input type="radio" name="disable" value="0"> No
+			<input type="radio" name="disable" value="1" checked> Yes	
+    % endif
+    </td>
+</tr>
+<tr>
+    <td class="tab_td1">${u"排序字段"}</td>
+    <td>
+	    <select  id="orderby" name="orderby">
+% for orderby in c.orderby:
+	% if orderby == c.cate.orderby:
+  		<option value="${orderby}" selected="selected">${orderby}</option>
+  	% else:
+  		<option value="${orderby}">${orderby}</option>
+  	% endif
+% endfor
+</select>
+	    <input type="hidden" name="typeid" value='${c.cate.typeid}' /> 
+    </td>
+</tr>
+<tr>
+    <td class="tab_td1">${u"图形"}</td><td>
+    <select  id="graphtype" name="graphtype">
+% for graphtype in c.graphtype:
+	% if graphtype == c.cate.graphtype:
+  		<option value="${graphtype}" selected="selected">${graphtype}</option>
+  	% else:
+  		<option value="${graphtype}">${graphtype}</option>
+  	% endif
+% endfor
+</select>
+    
+    </td>
+</tr>
+
+<tr>
+    <td class="tab_td1">${u"排序"}</td><td><input type="text" name="rankcode" value='${c.cate.rankcode}' class="input_text_short" /></td>
+</tr>
+
+<tr>
+    <td class="tab_td1">${u"数据支持"}</td><td><input type="text" name="datasupport" value='${c.cate.datasupport}' class="input_text_short" /> </td>
+</tr>
+
+% if c.cate.graphtype == "realtime":
+<tr>
+    <td colspan="2" style="text-align:center;background-color:#eee;"><strong>${u"实时监控"}</strong></td>
+</tr>
+<tr>
+    <td class="tab_td1">${u"分类"}</td><td>
+<select  id="typecode" name="typecode">
+% for typecode_k, typecode_v in c.r_typecode.iteritems():
+	% if typecode_v == c.cate.typecode:
+  		<option value="${typecode_v}" selected="selected">${typecode_k}</option>
+  	% else:
+  		<option value="${typecode_v}">${typecode_k}</option>
+  	% endif
+% endfor
+</select>
+ </td>
+</tr>
+<tr>
+    <td class="tab_td1">${u"警告"}</td><td><input type="text" name="warning" value='${c.cate.warning}' class="input_text_short" /> </td>
+</tr>
+<tr>
+    <td class="tab_td1">${u"崩潰"}</td><td><input type="text" name="critical" value='${c.cate.critical}' class="input_text_short" /> </td>
+</tr>
+
+<tr>
+    <td class="tab_td1">${u"日报"}</td><td>
+    % if c.cate.d_report == 0:
+	    <input type="radio" name="d_report" value="0" checked> No
+		<input type="radio" name="d_report" value="1"> Yes	
+    % else:
+    	    <input type="radio" name="d_report" value="0"> No
+			<input type="radio" name="d_report" value="1" checked> Yes	
+    % endif
+    </td>
+</tr>
+
+<tr>
+    <td class="tab_td1">${u"报警"}</td><td>   
+    % if c.cate.r_alert == 0:
+	    <input type="radio" name="r_alert" value="0" checked> No
+		<input type="radio" name="r_alert" value="1"> Yes	
+    % else:
+    	    <input type="radio" name="r_alert" value="0"> No
+			<input type="radio" name="r_alert" value="1" checked> Yes	
+    % endif
+    </td>
+</tr>
+
+<tr>
+    <td class="tab_td1">${u"权重"}</td><td>
+    <select  id="r_weight" name="r_weight">
+% for r_weight in c.r_weight:
+	% if r_weight == c.cate.r_weight:
+  		<option value="${r_weight}" selected="selected">${r_weight}</option>
+  	% else:
+  		<option value="${r_weight}">${r_weight}</option>
+  	% endif
+% endfor
+</select>
+    </td>
+</tr>
+
+<tr>
+    <td class="tab_td1">${u"分析模型"}</td><td>
+    
+% for r_mode in c.r_mode:
+	% if r_mode == c.cate.r_mode:
+  		<input type="radio" name="r_mode" value="${r_mode}" checked> ${r_mode}
+  	% else:
+  		<input type="radio" name="r_mode" value="${r_mode}" > ${r_mode}
+  	% endif
+% endfor
+<span class="intro">说明：a:A, b:V, c:<> d:.<>.</span>
+    </td>
+</tr>
+<%doc>
+<tr>
+    <td class="tab_td1">${u"暂停报警"}</td><td>    
+    % for r_snap in c.r_snap:
+		% if r_snap == c.cate.r_snap:
+	  		<input type="radio" name="r_snap" value="${r_snap}" checked> ${r_snap}
+	  	% else:
+	  		<input type="radio" name="r_snap" value="${r_snap}" > ${r_snap}
+	  	% endif
+	% endfor    
+    </td>
+</tr>
+</%doc>
+<tr>
+    <td class="tab_td1">${u"报警周期"}</td><td>
+    % for l_interval in c.l_interval:
+		% if l_interval == c.cate.l_interval:
+	  		<input type="radio" name="l_interval" value="${l_interval}" checked> ${l_interval}
+	  	% else:
+	  		<input type="radio" name="l_interval" value="${l_interval}" > ${l_interval}
+	  	% endif
+	% endfor        
+    </td>
+</tr>
+
+<tr>
+    <td class="tab_td1">${u"报警阀值"}</td><td class="tab_td2">
+    <%doc>
+	    % for x, x_thr in enumerate(c.list_alarm_threshold):
+	    	<input type="text" name="x_thr_${x}" value='${x_thr}' class="input_text_short" />
+	    % endfor
+	    最小值，稍小值，稍大值，最大值，最小百分比，稍小最分百，稍大百分比，最大百分比
+    </%doc>
+    <lu>
+	    <li><i>${u"最小值"}</i> <input type="text" name="x_thr_0" value='${c.list_alarm_threshold[0]}' class="input_text_short" /></li>
+	   	<li><i>${u"稍小值"}</i> <input type="text" name="x_thr_1" value='${c.list_alarm_threshold[1]}' class="input_text_short" /> </li>
+	   	<li><i>${u"稍大值"}</i> <input type="text" name="x_thr_2" value='${c.list_alarm_threshold[2]}' class="input_text_short" /> </li>
+	   	<li><i>${u"最大值"}</i> <input type="text" name="x_thr_3" value='${c.list_alarm_threshold[3]}' class="input_text_short" /> </li>
+	   	<li><i>${u"最小百分比"}</i> <input type="text" name="x_thr_4" value='${c.list_alarm_threshold[4]}' class="input_text_short" />% </li>
+	   	<li><i>${u"稍小最分百"}</i> <input type="text" name="x_thr_5" value='${c.list_alarm_threshold[5]}' class="input_text_short" />% </li>
+	   	<li><i>${u"稍大百分比"}</i> <input type="text" name="x_thr_6" value='${c.list_alarm_threshold[6]}' class="input_text_short" />% </li>
+	   	<li><i>${u"最大百分比"}</i> <input type="text" name="x_thr_7" value='${c.list_alarm_threshold[7]}' class="input_text_short" />% </li>
+   	</lu>
+    </td>
+</tr>
+
+<tr>
+    <td class="tab_td1">${u"参考线"}</td><td>   
+	    <input type="text" name="baseface" value="${c.cate.baseface}" />
+	% if c.cate.u_baseface == 0:
+	    <input type="radio" name="usebaseface" value="0" checked> No
+		<input type="radio" name="usebaseface" value="1"> Yes	
+    % else:
+    	    <input type="radio" name="usebaseface" value="0"> No
+			<input type="radio" name="usebaseface" value="1" checked> Yes	
+    % endif
+	    
+    </td>
+</tr>
+
+% endif
+
+<tr>
+    <td colspan="2" style="text-align:center;">    
+    <input type="submit" value="${u"保存"}" />
+    % if c.action == "submit":
+    <input type="button" value="${u'克隆'}" onclick="window.location.href='/categories/copy/${c.cate.typeid}'" /> 
+    % endif
+    
+    </td>
+</tr>
+</table>
+</form>
+
+

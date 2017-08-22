@@ -1,0 +1,65 @@
+<%inherit file="/base/index.html"/>
+
+<%def name="heading()"><h1 class="heading">${c.heading}</h1></%def>
+
+
+
+<table class="atable" cellspacing="0" border="0" cellpadding="0">
+<tr><td>ID</td><td>Deploy-ID</td><td>Name</td><td>En-Name</td><td>E-Mail</td><td>Tel</td><td>Mobile</td>
+% if request.environ.get('REMOTE_USER'):
+	<td>Action</td>
+% endif
+</tr>
+% for x,contact in enumerate(c.contacts):
+	<tr>
+		<td>#${contact.id}</td>
+		<td>${contact.eid}</td>
+		<td>${contact.name}</td>		
+		<td>${contact.ename}</td>		
+		<td>${contact.email}</td>
+		<td>${contact.subtel}</td>		
+		<td>${contact.mobile}</td>
+		% if request.environ.get('REMOTE_USER'):
+		<td><a href="/contacts/edit/${contact.id}">edit</a></td>
+		% endif
+	</tr>
+% endfor
+</table>
+
+
+
+<%def name="toolbox()">
+	<div class="slidebar">	
+		<h3 class="sbartitle">${"Search"}</h3>	
+		<form action="/contacts/list/1" method="post">
+		
+		% if c.qw == "nothing":
+			<input type="text" name="qw" value="" />
+		% else:
+			<input type="text" name="qw" value="${c.qw}" />
+		% endif
+			<input name="submit" type="submit" value="Go" />
+		
+		</form>
+	</div>
+	
+	
+		<div class="slidebar">	
+			<h3 class="sbartitle">${"usefully"}</h3>	
+			
+			<p>
+			% for qw in c.my_contacts:		
+				<a href="/contacts/list/1?qw=${qw}">${qw}</a> 
+			% endfor
+			</p>
+			
+		</div>
+	
+	
+	<div class="slidebar">	
+		<h3 class="sbartitle">${"Assistant"}</h3>	
+		<ul class="sbarlist">		
+			<li><a href="/contacts/new">New Contact</a></li>
+		</ul>
+	</div>
+</%def>

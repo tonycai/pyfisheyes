@@ -1,0 +1,61 @@
+<%inherit file="/base/index.html"/>
+<%def name="heading()">
+<h1>${c.heading}</h1>
+</%def>
+
+<div class="newtableform">
+% if hasattr(c,'act') and c.act == "edit":
+	<form action="/contacts/editsubmit/${c.contact_id}" method="post">
+% else:
+	<form action="/contacts/newsubmit/1" method="post">
+% endif
+<table>	
+	<tr class="field">
+<td valign="top" class="label"><label>${"Deploy-ID"}:</label></td>
+<td valign="top" colspan="2"><input id="contact_eid" name="contact_eid" type="text" value="${c.contact.eid}" /></td>
+</tr>
+	
+	<tr class="field">
+<td valign="top" class="label"><label>${"Name"}:</label></td>
+<td valign="top" colspan="2"><input id="contact_name" name="contact_name" type="text" value="${c.contact.name}" /></td>
+</tr>
+	
+	<tr class="field">
+<td valign="top" class="label"><label>${"En-Name"}:</label></td>
+
+<td valign="top" colspan="2"><input id="contact_ename" name="contact_ename" type="text" value="${c.contact.ename}" /></td>
+</tr>
+	
+	<tr class="field">
+<td valign="top" class="label"><label>${"Job-Title"}:</label></td>
+<td valign="top" colspan="2"><input id="contact_title" name="contact_title" type="text" value="${c.contact.title}" /></td>
+</tr>
+	
+	<tr class="field">
+<td valign="top" class="label"><label>${"Tel"}:</label></td>
+<td valign="top" colspan="2"><input id="contact_subtel" name="contact_subtel" type="text" value="${c.contact.subtel}" /></td>
+</tr>
+	
+	<tr class="field">
+<td valign="top" class="label"><label>${"Mobile"}:</label></td>
+
+<td valign="top" colspan="2"><input id="contact_mobile" name="contact_mobile" type="text" value="${c.contact.mobile}" /></td>
+</tr>
+	
+	<tr class="field">
+<td valign="top" class="label"><label>${"E-Mail"}:</label></td>
+<td valign="top" colspan="2"><input id="contact_email" name="contact_email" type="text" value="${c.contact.email}" /></td>
+</tr>
+	
+	<tr class="field">
+<td valign="top" class="label"><label>${"Tags"}:</label></td>
+<td valign="top" colspan="2"><input id="contact_tags" name="contact_tags" type="text" value="${c.contact.forsearch}" /></td>
+</tr>
+    
+    <tr class="field">
+<td valign="top" class="label"><label></label></td>
+
+<td valign="top" colspan="2"><input id="submit" name="submit" type="submit" value="Save" /></td>
+</tr>
+</table></form>
+</div>

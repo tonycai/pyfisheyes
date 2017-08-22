@@ -1,0 +1,39 @@
+<%inherit file="/base/index.html"/>
+
+<%def name="heading()"><h1 class="heading">${c.heading}</h1></%def>
+
+<div class="pagination">
+	${c.events.pager('total:$item_count Page $page/$page_count: $link_previous ~4~ $link_next ')}
+	<%doc>
+	${c.events.pager('total:$item_count Page $page/$page_count: $link_first $link_previous ~4~ $link_next $link_last')}
+	</%doc>
+</div>
+
+<table class="atable" cellspacing="0" border="0" cellpadding="0">
+<tr>
+	<td>id</td>
+	<td width="70%">name</td>
+	<td>date</td>
+</tr>
+% for x,e in enumerate(c.events):
+	<tr>
+		<td><a href="/events/detail/${e.id}">#${e.id}</a></td>
+		<td>${e.evtitle}</td>
+		<td>${e.evdate}</td>
+		
+	</tr>
+% endfor
+</table>
+
+<div class="pagination">
+	${c.events.pager('total:$item_count Page $page/$page_count: $link_previous ~4~ $link_next ')}
+</div>
+
+<%def name="toolbox()">
+	<div class="slidebar">	
+		<h3 class="sbartitle">${"Assistant"}</h3>	
+		<ul class="sbarlist">
+			<li><a href="/events/new">New Event</a></li>
+		</ul>	
+	</div>
+</%def>

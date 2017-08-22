@@ -1,0 +1,239 @@
+<%inherit file="/base/index.html"/>
+
+<%def name="heading()">
+<h1>${c.heading}</h1>
+</%def>
+
+<%def name="head_tags()">
+${h.javascript_link(h.url_for('/jquery/js/jquery-1.4.4.min.js'))}
+${h.javascript_link(h.url_for('/jquery/js/jquery-ui-1.8.8.custom.min.js'))}    
+${h.stylesheet_link(h.url_for('/jquery/development-bundle/themes/pepper-grinder/jquery.ui.all.css'))}
+<script type="text/javascript" src="/markitup/jquery.markitup.js"></script>
+<script type="text/javascript" src="/markitup/sets/textile/set.js"></script>
+<!-- <script src="${url('/js/App.Upload.js')}" type="text/javascript"></script> -->
+<link rel="stylesheet" type="text/css" href="/markitup/skins/markitup/style.css" />
+<link rel="stylesheet" type="text/css" href="/markitup/sets/textile/style.css" />
+</%def>
+
+<%def name="title()">${c.heading}</%def>
+
+<%def name="script()">
+  	<script type="text/javascript">		
+		$("document").ready(function(){
+			
+			$(function() {
+				$( ".date" ).datepicker({ dateFormat: 'yy-mm-dd' });				
+			});
+
+			$('#ftextile').markItUp(myTextileSettings);
+
+			/* jQuery('#forms').fileUpload({action:'/', field_name:'file_field',submit_label:'upload',use_iframes:true}) */
+			
+			/* 验证图片ID是否存在 */
+			
+			$("input[name='graphs']").blur(function(){
+				  
+				  if($(this).val() != ''){
+					  
+						$.ajax({
+								url:"/events/checkImgid",
+								data:"graphs="+$(this).val(),
+								success:function(html){
+									$("input[name='graphs']").siblings(".error").remove();
+								
+									if(html)
+									{
+										
+										$("input[name='graphs']").after("<span class='error'> "+html+" </span>");	
+										
+									}
+								}
+						
+	
+							   });
+					}
+
+				});
+
+
+			/* 验证日期与时间的格式 */
+
+			$(".datetime").blur(function(){
+				
+					var patt1=/\d{4}\-\d{2}\-\d{2}/
+					var patt2=/\d{2}/
+				
+					if($(this).hasClass("date")&&$(this).val()){
+						
+						var resulte = patt1.test($(this).val())
+						$(this).siblings(".error").remove();
+						if(!resulte ){
+							
+								$(this).parent("td").append("<span class='error'> 日期格式错误</span>");
+							}
+						
+					}else if($(this).hasClass("h")&&$(this).val()){
+						
+						var resulte = patt2.test($(this).val())
+						$(this).siblings(".error").remove();
+						if(!resulte || parseInt($(this).val())>24){
+							
+								$(this).parent("td").append("<span class='error'> 时间格式错误</span>");
+							}
+						
+					}else if($(this).hasClass("m")&&$(this).val()){
+						
+						var resulte = patt2.test($(this).val())
+						$(this).siblings(".error").remove();
+						if(!resulte || parseInt($(this).val())>60){
+							
+								$(this).parent("td").append("<span class='error'> 时间格式错误</span>");
+							}
+						
+					}
+				});
+			$(".require").blur(function(){
+				$(this).siblings(".error").remove();
+				if($(this).val()==""){
+					$(this).parent("td").append("<span class='error'> 必填项不能为空</span>");
+				}
+					
+		  	    });
+									
+		  });
+		  
+		  $("document").ready(App.Upload.init);	
+		  
+		  function validate(){
+			  	  
+			      // 验证必填项是否存在
+				  $(".require").each(function(){
+					  		$(this).siblings(".error").remove();
+							if($(this).val() == ''){
+						   			$(this).parent("td").append("<span class='error'> 必填项不能为空</span>");
+						   		}
+								
+					});
+					
+				  	$("input[name='graphs']").triggerHandler("blur")
+				  	
+					if($(".error").length > 0){
+						
+						return false;
+						
+					}else{
+						
+						return true;
+						
+					}
+
+			  } 
+		  
+	</script>
+
+</%def>
+
+
+<div>
+% if hasattr(c,'id') and c.id:
+	<form action="/events/editsubmit/${c.id}" method="post" enctype="multipart/form-data" onsubmit="return validate()">
+% else:
+	<form action="/events/newsubmit" method="post" enctype="multipart/form-data" onsubmit="return validate()">
+% endif
+		<table class="newevent">
+			<tr class="field"><td valign="top" colspan="2"><input name="submit" type="submit" value="Save" /></td></tr>
+			<tr class="field"><td valign="top" colspan="2"><label for="event_name"><span style="color:red;">＊</span> 主题:</label> <input class="require" id="event_name" name="event_name" type="text" value="${c.event.evtitle}" size="80" style="width:400px;" /> #${c.event.id}</td>
+		</tr>
+		    <tr class="field"><td valign="top" colspan="2"> <label for="event_date"><span style="color:red;">＊</span> 发生时间:</label>
+		    %if hasattr(c,'d1'):
+		    <input class="require date datetime" id="event_date" name="d1" type="text" value ="${c.d1}" /> 
+		    %else:
+		    <input class="require date datetime" id="event_date" name="d1" type="text" value ="${str(c.event.evdate)[0:10]}" />
+		    %endif
+		    <input class="require h datetime" value ="${str(c.event.evdate)[11:13]}" name='h1' type="text" style="width:40px;" maxlength="2" /> : <input class="require m datetime" name='m1' type="text" style="width:40px;" maxlength="2" value="${str(c.event.evdate)[14:16]}" /> </td>
+		</tr>
+		<tr class="field"><td valign="top" colspan="2"><label for="">发现时间: </label> <input class=" date datetime" name="d2" type="text" value ="${str(c.event.dt2)[0:10]}" /> <input type="text" name='h2' style="width:40px;" class="h datetime" maxlength="2"  value="${str(c.event.dt2)[11:13]}"/> : <input value="${str(c.event.dt2)[14:16]}" name='m2' type="text" style="width:40px;" maxlength="2" class="m datetime" /></td>
+		</tr>
+		<tr class="field"><td valign="top" colspan="2"><label for="">查明原因时间: </label> <input class="date datetime" name="d3" type="text" value ="${str(c.event.dt3)[0:10]}" /> <input type="text" name='h3' style="width:40px;" class="h datetime"  maxlength="2" value="${str(c.event.dt3)[11:13]}" /> : <input value="${str(c.event.dt3)[14:16]}" type="text" name='m3' class="m datetime" style="width:40px;" maxlength="2" /></td>
+		</tr>
+		<tr class="field"><td valign="top" colspan="2"><label for="">解决问题时间: </label> <input class="date datetime" name="d4" type="text" value ="${str(c.event.dt4)[0:10]}" /> <input type="text" name='h4' style="width:40px;" class="h datetime"  maxlength="2" value="${str(c.event.dt4)[11:13]}" /> : <input value="${str(c.event.dt4)[14:16]}" type="text" name='m4' class="m datetime" style="width:40px;" maxlength="2" /></td>
+		</tr>
+			<tr><td><label>事件图片:</label>
+			%if hasattr(c,'imgid'):
+			<input type="text" value="${c.imgid}" name="graphs"/>
+			%else:
+			<input type="text" value="${c.graphs}" name="graphs" id="graphs"/> 
+			%endif
+			<span>多张图片请以逗号","相隔</span></td></tr>
+			<tr class="field"><td valign="top" colspan="2"><textarea id="ftextile" cols="80" name="event_content" rows="20">${c.event.evcontent}</textarea>
+		</td></tr>
+		<!-- 
+			<tr><td valign="top" colspan="2">
+						tags:<input id="event_tags" name="event_tags" type="text" value ="${c.event.evtags}" size=15 />
+						min:<input id="event_minutes" name="event_minutes" type="text" value ="${c.event.evminutes}" size=3 />
+						losspv:<input id="event_losspv" name="event_losspv" type="text" value ="${c.event.evlosspv}" size=3 />
+						cause:<select id="event_cause" name="event_cause">
+									% for cause in c.event_cause:  
+										% if cause == c.event.evcause:
+									  		<option value="${cause}" selected="selected">${cause}</option>
+									  	% else:
+									  		<option value="${cause}">${cause}</option>
+									  	% endif
+									% endfor
+							</select>
+					</td>
+			</tr>
+			<tr><td>
+				type:<select  id="event_type" name="event_type">
+				% for evtype in c.event_type:
+					% if evtype == c.event.evtype:
+				  		<option value="${evtype}" selected="selected">${evtype}</option>
+				  	% else:
+				  		<option value="${evtype}">${evtype}</option>
+				  	% endif
+				% endfor
+				</select>
+				
+				status:<select id="event_status" name="event_status">
+				% for status in c.event_status:
+					% if status == c.event.evstatus:
+				  		<option value="${status}" selected="selected">${status}</option>
+				  	% else:
+				  		<option value="${status}">${status}</option>
+				  	% endif  
+				% endfor
+				</select>
+				domain:<select  id="event_domain" name="event_domain">
+				% for domain in c.event_domain:
+				  
+					% if domain == c.event.evdomain:
+				  		<option value="${domain}" selected="selected">${domain}</option>
+				  	% else:
+				  		<option value="${domain}">${domain}</option>
+				  	% endif  
+				% endfor
+		</select>
+		
+			</td>
+			</tr>
+		 -->
+		 <tr><td><label><span style="color:red">* </span>记录人：</label><input class="require" type="text" value="" name='creator'/></td></tr>
+			<tr class="field">
+			<td valign="top" colspan="2"><input id="submit" name="submit" type="submit" value="Save" /></td>
+			</tr>
+		</table>
+	</form>
+</div>
+<div id="flash"></div>
+<!-- <div id="upload"></div> -->
+
+
+<%def name="toolbox()">
+	<div class="box">	
+		<h3>${"Assistant"}</h3>	
+		<ul>
+			<li><a href="/events/new">New Event</a></li>
+			<li><a href="http://redcloth.org/hobix.com/textile/" target="_blank">Textile Reference</a></li>
+		</ul>	
+	</div>	
+</%def>

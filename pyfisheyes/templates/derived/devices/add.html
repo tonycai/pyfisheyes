@@ -1,0 +1,57 @@
+<%inherit file="/base/index.html"/>
+<%namespace name="search" file="/component/search.html" import="*" />
+<%def name="heading()"><h1 class="heading">${c.heading}</h1></%def>
+<%def name="title()">${c.pagename}</%def>
+ %if hasattr(c,'info'):
+<form method="post" action="/devices/deviceedit">
+<input type='hidden' name="id" value='${c.info.id}' />
+<input type='hidden' name="hostname_1" value='${c.info.hostname}' />
+<input type='hidden' name="serial_no_1" value='${c.info.serial_no}' />
+ <table>
+			<tr><td><span style="color:red;">＊</span>hostname</td><td><input type="text" name="hostname" value="${c.info.hostname}" disabled="disabled" /></td><td><span style="color:red;">＊</span>serial_no</td><td><input type="text" name="serial_no" value="${c.info.serial_no}" disabled="disabled" /></td></tr>
+			<tr><td><span style="color:red;">＊</span>source_ip</td><td><input type="text" name="source_ip" value="${c.info.source_ip}" disabled="disabled" /></td><td>domain</td><td><input type="text" name="domain" value="${c.info.domain}" disabled="disabled" /></td></tr>
+			<tr><td>hardware</td><td><input type="text" name="hardware" value="${c.info.hardware}" disabled="disabled" /></td><td>cpuinfo</td><td><input type="text" name="cpuinfo" value="${c.info.cpuinfo}" disabled="disabled" /></td></tr>
+			<tr><td>cpucore</td><td><input type="text" name="cpucore" value="${c.info.cpucore}" disabled="disabled" /></td><td>memsize</td><td><input type="text" name="memsize" value="${c.info.memsize}" disabled="disabled" /></td></tr>
+			<tr><td>diskspace</td><td><input type="text" name="diskspace" value="${c.info.diskspace}" disabled="disabled" /></td><td>netcard</td><td><input type="text" name="netcard" value="${c.info.netcard}" disabled="disabled" /></td></tr>
+			<tr><td>inetaddr</td><td><input type="text" name="inetaddr" value="${c.info.inetaddr}" disabled="disabled" /></td><td>purchased</td><td><input type="text" name="purchased" value="${c.info.purchased}" disabled="disabled" /></td></tr>
+			<tr><td>os_info</td><td><input type="text" name="os_info" value="${c.info.os_info}" disabled="disabled" /></td><td>customer</td><td><input type="text" name="customer" value="${c.info.customer}"/></td></tr>
+			<tr><td>in_service</td><td><input type="text" name="in_service" value="${c.info.in_service}" disabled="disabled" /></td><td>kernel_info</td><td><input type="text" name="kernel_info" value="${c.info.kernel_info}" disabled="disabled" /></td></tr>
+			<tr><td>building</td><td><input type="text" name="building" value="${c.info.building}" /></td><td>hidden</td><td><input type="text" name="hidden" value="${c.info.hidden}" disabled="disabled" /></td></tr>
+			<tr><td>roles</td><td><input type="text" name="roles" value="${c.info.roles}" disabled="disabled" /><td>rack_pos</td><td><input type="text" name="rack_pos" value="${c.info.rack_pos}" /></td></td></tr>
+		
+			<tr><td>for_search</td><td><input type="text" name="for_search" value="${c.info.for_search}" disabled="disabled" /></td><td>ship_date</td><td><input type="text" name="ship_date" value="${c.info.ship_date}" disabled="disabled" /></td></tr>
+			<tr><td>notes</td><td colspan="3"><textarea name="notes" style="width:450px;">${c.info.notes}</textarea></td></tr>
+			<tr><td colspan="4"><input type="submit" value="保存"/>
+			%if hasattr(c,'error'):
+			<span style="color:red">${c.error}</span>
+			%endif</td> 
+			
+			
+			</tr>
+		</table>
+ %else:
+ <form method="post" action="/devices/deviceadd">
+		<table>
+			<tr><td><span style="color:red;">＊</span>hostname</td><td><input type="text" name="hostname" /></td><td><span style="color:red;">＊</span>serial_no</td><td><input type="text" name="serial_no" /></td></tr>
+			<tr><td><span style="color:red;">＊</span>source_ip</td><td><input type="text" name="source_ip"></td><td>domain</td><td><input type="text" name="domain"></td></tr>
+			<tr><td>hardware</td><td><input type="text" name="hardware"></td><td>cpuinfo</td><td><input type="text" name="cpuinfo"></td></tr>
+			<tr><td>cpucore</td><td><input type="text" name="cpucore"></td><td>memsize</td><td><input type="text" name="memsize"></td></tr>
+			<tr><td>diskspace</td><td><input type="text" name="diskspace"></td><td>netcard</td><td><input type="text" name="netcard"></td></tr>
+			<tr><td>inetaddr</td><td><input type="text" name="inetaddr"></td><td>purchased</td><td><input type="text" name="purchased"></td></tr>
+			<tr><td>os_info</td><td><input type="text" name="os_info"></td><td>customer</td><td><input type="text" name="customer"></td></tr>
+			<tr><td>in_service</td><td><input type="text" name="in_service"></td><td>kernel_info</td><td><input type="text" name="kernel_info"></td></tr>
+			<tr><td>building</td><td><input type="text" name="building"></td><td>hidden</td><td><input type="text" name="hidden"></td></tr>
+			<tr><td>roles</td><td><input type="text" name="roles"><td>rack_pos</td><td><input type="text" name="rack_pos"></td></td></tr>
+		
+			<tr><td>for_search</td><td><input type="text" name="for_search"></td><td>ship_date</td><td><input type="text" name="ship_date"></td></tr>
+			<tr><td>notes</td><td colspan="3"><textarea name="notes" style="width:450px;"></textarea></td></tr>
+			<tr><td colspan="4"><input type="submit" value="保存"/>
+			%if hasattr(c,'error'):
+			<span style="color:red">${c.error}</span>
+			%endif</td> 
+			
+			
+			</tr>
+		</table>
+%endif
+</form>

@@ -1,0 +1,246 @@
+<%inherit file="/base/index.html"/>
+
+<%def name="head_tags()">
+${h.javascript_link(h.url_for('/jquery/js/jquery-1.6.2.min.js'))}
+${h.javascript_link(h.url_for('/jquery/js/jquery-ui-1.8.8.custom.min.js'))}
+${h.javascript_link(h.url_for('/jquery/development-bundle/ui/i18n/jquery.ui.datepicker-zh-CN.js'))}  
+${h.javascript_link(h.url_for('/jquery/development-bundle/external/jquery.cookie.js '))}  
+${h.stylesheet_link(h.url_for('/jquery/development-bundle/themes/pepper-grinder/jquery.ui.all.css'))}
+${h.stylesheet_link(h.url_for('/css/view.css'))}
+${h.stylesheet_link(h.url_for('/lib/jqzoom/css/jquery.jqzoom.css'))}
+
+${h.javascript_link(h.url_for('/js/view.js'))}
+${h.javascript_link(h.url_for('/lib/jqzoom/js/jquery.jqzoom-core.js'))} 
+</%def>
+<%def name="title()">${c.topic}</%def>
+<%def name="script()">
+<script>
+var opt = "${c.opt}";
+var date = "${c.date}";
+var date2 = "${c.date2}";
+var tid = "${c.template_id}";
+var pagename = "${c.pagename}";
+var imgpath = "${c.imgpath}";
+var ck = "${c.ck}"
+</script>
+</%def>
+<%def name="heading()">
+<p class="pageguide floatl">
+%if c.pre_topic:
+<a class="pre" href="${c.pre_topic.typeid}">&lt;&lt;&nbsp;${c.pre_topic.typename}</a>
+%endif
+%if c.next_topic:
+<a class="next" href="${c.next_topic.typeid}">${c.next_topic.typename}&nbsp;&gt;&gt;</a>
+%endif
+</p>
+<h1 class="clear">
+${c.topic} #${c.template_id}
+	% if request.environ.get('REMOTE_USER'):
+	 <a href="/categories/edit/${c.template_id}">编辑</a>
+	% endif
+</h1>
+</%def>
+% if c.pagename == "realtime":	
+	<div class="container">			
+		    <ul class="tabs">
+		        <li><a href="#tab1">图表</a></li>		        
+		        <li><a href="#tab2">设置</a></li>
+		        <li><a href="#tab3">行动</a></li>
+		    </ul>	    
+	    <div class="tab_container">
+	        <div id="tab1" class="tab_content" style="text-align:center;">            
+	            <p id="portfolio_0">
+	            	%if c.pweekday == '1':
+		            	<a class="largeimg floatl" rel="gal1" href="${c.imgpath}/view/graph2/${c.template_id}/${c.opt}/${c.date2}/7126x350/2.png?pweekday=${c.pweekday}" id="imglink">
+		            	<img id="img" src="${c.imgpath}/view/graph/${c.template_id}/${c.opt}/0000-00-00/${c.date2}/1.png?pweekday=${c.pweekday}" />
+		            	</a>
+		            %else:
+		            	<a class="largeimg floatl" rel="gal1" href="${c.imgpath}/view/graph2/${c.template_id}/${c.opt}/${c.date2}/7126x350/2.png" id="imglink">
+		            	<img id="img" src="${c.imgpath}/view/graph/${c.template_id}/${c.opt}/0000-00-00/${c.date2}/1.png" />
+		            	</a>
+		            %endif
+		                <p class="fguide">
+								<a title="对比" href="/list/realtime?viewmdays&typeid=${c.template_id}&typename=${c.topic}&odate=${c.date2}" class="fl a1">对比</a>
+								<a title="放大" href="${c.imgpath}/view/graph2/${c.template_id}/${c.opt}/${c.date2}/7126x350/2.png" class="fl a2">放大</a>
+								
+						</p> 
+	            </p>
+	        </div>
+	        <div id="tab2" class="tab_content">
+	            <ul>
+	            	
+	            	<li><i>日报 </i>
+	            	% if c.t.d_report:
+						开启
+					% else:
+						关闭
+					% endif
+	            	</li>
+	            	<li><i>提醒 </i>
+	            	% if c.t.r_alert:
+						开启
+					% else:
+						关闭
+					% endif
+	            	</li>
+	            	<li><i>权重 </i>${c.t.r_weight}</li>
+	            	<li><i>参考线 </i>
+	            	% if c.t.u_baseface:	            		       	
+	            		开启 (${c.t.baseface})
+					% else:
+						关闭
+					% endif
+	            	</li>
+	            	
+	            	<li><i>短信通知 </i>
+	            	% if c.t.r_weight>5 and c.t.r_alert:
+						开启
+					% else:
+						关闭
+					% endif
+					</li>
+	            	<li><i>分析模型 </i>${c.t.r_mode}类</li>
+	            	<li><i>报警阀值 </i>
+	            	% if c.t.r_mode == 'a':
+						警告 ${c.list_alarm_threshold[2]} , 崩潰 ${c.list_alarm_threshold[3]}
+					% elif c.t.r_mode == 'b':            	
+						警告 ${c.list_alarm_threshold[1]} , 崩潰 ${c.list_alarm_threshold[0]}
+					% elif c.t.r_mode in ['c','d']:
+						崩潰 -${c.list_alarm_threshold[4]}% , 警告 -${c.list_alarm_threshold[5]}% , 警告 ${c.list_alarm_threshold[6]}% , 崩潰 ${c.list_alarm_threshold[7]}%
+					% else:
+					   noset
+					% endif
+	            	</li>
+	            	
+	            </ul>       
+	        </div>
+	        <div id="tab3" class="tab_content">	            
+	            <p></p>
+	        </div>
+	    </div>
+	</div>
+% else:
+	<div class="graph">
+	<p id="portfolio_0"><img src="${c.imgpath}/view/graph/${c.template_id}/${c.opt}/${c.date}/${c.date2}/1.png" /></p>
+	</div>
+% endif
+
+
+<div id="dialog" title="${c.topic}">
+	<p id="dialog_content"></p>
+</div>
+
+% if c.pagename == "realtime":	
+<div class="clear">	            
+	<p><strong>合计</strong>：${c.sumvalue}　限制Ｙ轴最大值：<input type="text" id="ysize" style='width:80px;' /> <input type="button" id="ysizeok" value="确定"/> <input type="button" id="ysizeclear" value="清除"/>
+	</p>
+</div>
+% endif
+% if c.pagename == "realtime":
+%if hasattr(c,'events'):
+<div ><h3 style="line-height:30px;font-weight:bold;border-bottom:1px solid orange;margin-top:5px;font-size:14px;color:#FF9933">事件</h3>
+%for x,t in enumerate(c.events):
+	<dl style="line-height:24px;border-bottom:1px dashed orange;"><dt><a href="/events/detail/${t.id}" style="color:#333;">${t.evtitle}</a></dt><dd>${t.evcontent}</dd><dl>	
+%endfor
+</div>
+%endif
+
+% endif
+<div id="page-area"><%include file="onlydata.html"/></div>
+
+
+<%def name="toolbox()">
+% if c.pagename == "realtime":
+<div class="box">	
+		<h3>${"Search"}</h3>	
+		<form action="/list/realtime?montoring" method="get">
+			<input type="hidden" name="montoring" value=1 />
+			<input type="text" name="s" value="${c.sw}" />	
+			<input type="submit" value="Go" />
+		
+		</form>
+	</div>
+%endif
+
+<div class="box">
+
+% if c.pagename == "day":
+	<h3>开始日期:</h3>
+	<div id="datepicker"></div>
+	<h3></h3>
+	<h3>结束日期:</h3>
+	<div id="datepicker2"></div>
+% else:	
+	<h3>选择日期 <input type="checkbox" name="onlyshowyester" id="osy"  value="${c.yesterday}" ${c.set_default_day} /><label style="font-size:10px" for="osy">记住</label></h3>
+	
+	<div id="datepicker2"></div>
+% endif
+
+</div>
+
+
+% if len(c.items)>2 and c.pagename == "day":
+<div class="box">
+	<h3>隐藏</h3>
+	<ul style="float:left;">
+	% for x,item in enumerate(c.items):
+		% if x > 0:
+			<li style="float:left;"><input type="checkbox" name="item" id="item_${x}"  value="${x}" /><label for="item_${x}">${item}</label></li>
+		% endif
+	% endfor
+	<br style="clear:both;"></br>
+	</ul>
+</div>
+% endif
+
+% if len(c.items)>2 and c.pagename == "realtime":
+<div class="box">
+	<h3>隐藏</h3>
+	<ul>
+		<li><input type="checkbox" name="pweekday" id="ritem_1"  value="1" checked/><label for="ritem_1">上周同一天</label></li>		
+	</ul>
+</div>
+% endif
+
+<div class="box">
+
+<h3>工具箱</h3>
+
+<ul>
+	% if c.pagename == "realtime":
+	<li><a href="/events/new?d1=${c.date2}&graphs=${c.template_id}" title="Report">New Event</a></li>
+	<li>
+	%if c.pweekday == '1':
+		<a href="${c.imgpath}/view/graph2/${c.template_id}/${c.opt}/${c.date2}/7126x350/2.png?pweekday=${c.pweekday}">查看大图</a>
+	%else:
+		<a href="${c.imgpath}/view/graph2/${c.template_id}/${c.opt}/${c.date2}/7126x350/2.png">查看大图</a>
+    %endif
+    </li>
+    % endif
+	<li><a href="${h.url(controller="view", action="exporttoexcel",id=c.template_id)}" id="ExporttoExcel">导出Excel</a></li>
+	<li><a href="${h.url(controller="view", action="webapi",id=c.template_id)}">写入接口</a></li>
+	% if c.pagename == "realtime":
+	<li><a href="/list/realtime?montoring" title="每分钟刷新一次" >监控模式</a></li>
+	<li><a href="/list/realtime?fullscreen" title="不刷新" >全屏模式</a></li>
+	<li><a href="/daily_report/lookup_system" title="Report">Report</a></li>
+	
+	% endif
+	
+</ul>
+
+</div>
+
+<div class="box">
+
+<h3>信息</h3>
+
+<ul>
+	% if c.datasupport != "":
+	<li>数据支持： <a href="/contacts/list/1?qw=${c.datasupport}">${c.datasupport}</a></li>
+	% endif
+	<li>访问量： ${c.accessed} 次</li>
+</ul>
+
+</div>
+
+</%def>

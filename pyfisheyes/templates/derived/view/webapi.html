@@ -1,0 +1,53 @@
+<%inherit file="/base/index.html"/>
+
+<%def name="heading()"><h1>WebAPI - ${c.typename}</h1></%def>
+
+<%def name="head_tags()">
+${h.javascript_link(h.url_for('/jquery/js/jquery-1.4.4.min.js'))}
+${h.javascript_link(h.url_for('/jquery/js/jquery-ui-1.8.8.custom.min.js'))}    
+${h.stylesheet_link(h.url_for('/jquery/development-bundle/themes/pepper-grinder/jquery.ui.all.css'))}
+	<%doc>
+	${h.stylesheet_link(h.url_for('/js/development-bundle/demos/demos.css'))}
+	</%doc>
+</%def>
+<%def name="title()">webapi</%def>
+
+
+<%def name="script()">
+  <script>		
+		$("document").ready(function(){
+			% if "datei" in c.items:
+/*datepicker*/
+			$(function() {
+				$( "#datei" ).datepicker({ dateFormat: 'yy-mm-dd' });				
+			});
+			% endif
+		  })		  
+	</script>
+</%def>
+
+
+<%def name="toolbox()">
+	<div class="box">	
+		<h3>${"Assistant"}</h3>	
+		<ul>
+			<li><a href="${h.url(controller="view", action="data",id=c.template_id)}" class="back">Back</a></li>
+		</ul>	
+	</div>
+</%def>
+
+
+<div>
+${h.form_start(h.url(controller="view", action="webapipost",id=c.template_id), method="post")}
+
+% for item in c.items:
+	
+	${h.field(
+        item,
+        h.text(name=item),
+    )}
+% endfor
+    ${h.hidden("tid",c.template_id)}
+    ${h.field(field=h.submit(value="Save", name='submit'))}
+${h.form_end()}
+</div>

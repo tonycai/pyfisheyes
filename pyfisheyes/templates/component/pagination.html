@@ -1,0 +1,25 @@
+<%def name="pagin(cp, is_ajax)">
+<div class="pagination">
+% if is_ajax:
+	${cp.rows.pager('$link_previous ~4~ $link_next ',symbol_first=u'首页', symbol_last=u'末页', symbol_previous=u'上一页', symbol_next=u'下一页',onclick="$('#page-area').load('%s',function(){}); return false;")}
+% else:
+	${cp.rows.pager('total:$item_count page $page: $link_previous ~4~ $link_next', symbol_last=u'末页', symbol_previous=u'上一页', symbol_next=u'下一页')}
+% endif
+</div>
+</%def>
+<%doc>
+pager(format='~2~', 
+	page_param='page', 
+	partial_param='partial', 
+	show_if_single_page=False, 
+	separator=' ', 
+	onclick=None, 
+	symbol_first='<<', 
+	symbol_last='>>', 
+	symbol_previous='<', 
+	symbol_next='>', 
+	link_attr={'class': 'pager_link'}, 
+	curpage_attr={'class': 'pager_curpage'}, 
+	dotdot_attr={'class': 'pager_dotdot'}, 
+	**kwargs)
+</%doc>

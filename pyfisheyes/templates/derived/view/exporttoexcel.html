@@ -1,0 +1,58 @@
+<%inherit file="/base/index.html" />
+
+<%def name="heading()">
+  <h1>Export to Excel - ${c.typename}</h1>
+</%def>
+
+
+
+<div class="info-box" inner_wrapper_class="round-corner-with-bg-img" style="padding: 0px 0pt 0pt"><div class="ab-bg"><span class="ab-corner lvl1" style=""></span><span class="ab-corner lvl2" style=""></span><span class="ab-corner lvl3" style=""></span><span class="ab-corner lvl4" style=""></span></div>
+  <div class="round-corner-with-bg-img">
+    
+  <h2>How to use export</h2>
+  <ol>
+  	<li>Select all the text in the text area below</li>
+  	<li>Copy it to the clipboard</li>
+
+  	<li>Open a new Excel document (or choose a good spot in an existing document)</li>
+  	<li>Paste the text into the Excel document</li>
+  </ol>
+
+  </div>
+<div class="ab-bg"><span class="ab-corner lvl4" style=""></span><span class="ab-corner lvl3"  style=""></span><span class="ab-corner lvl2"  style=""></span><span class="ab-corner lvl1"  style=""></span></div>
+</div>
+
+
+<div style='margin-left: 1em;'>
+            <fieldset style="border:none;padding:0px;margin:0;background-color: transparent;">
+
+          <div style="padding:0;margin:0;border:none">
+            <textarea id="tab_separated_export" name="tab_separated_export" rows="25" style="font-size: 92%; width:99%">${c.columns}
+% for x,row in enumerate(c.rows):
+${x+1}${row.exporttoexcel()}
+% endfor
+</textarea>
+          </div>
+          </fieldset>
+
+</div>
+
+
+<div class="action-bar" inner_wrapper_class="action-bar-inner-wrapper" style="padding: 0px 0pt 0pt"><div class="ab-bg"><span class="ab-corner lvl1" style=""></span><span class="ab-corner lvl2" style=""></span><span class="ab-corner lvl3" style=""></span><span class="ab-corner lvl4" style=""></span></div>
+  <div class="action-bar-inner-wrapper">
+    
+	<!--  <a href="${h.url(controller="view", action="data",id=c.template_id)}" class="back">Back</a>  -->
+
+  </div>
+<div class="ab-bg"><span class="ab-corner lvl4" style=""></span><span class="ab-corner lvl3"  style=""></span><span class="ab-corner lvl2"  style=""></span><span class="ab-corner lvl1"  style=""></span></div>
+</div>
+
+
+<%def name="toolbox()">
+	<div class="box">	
+		<h3>${"Assistant"}</h3>	
+		<ul>
+			<li><a href="${h.url(controller="view", action="data",id=c.template_id)}" class="back">Back</a></li>
+		</ul>	
+	</div>
+</%def>

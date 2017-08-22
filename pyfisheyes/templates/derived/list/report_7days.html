@@ -1,0 +1,81 @@
+<%inherit file="/base/index.html"/>
+<%namespace name="navigation" file="/component/navigation.html" import="*" />
+
+<%def name="head_tags()">
+<script type="text/javascript" src="/jquery/js/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="/jquery/js/jquery-ui-1.8.8.custom.min.js"></script>
+<script src="/js/CJL.0.1.min.js"></script>
+<script src="/js/LazyLoad.js"></script>
+<script src="/js/lazyLoadImg.js"></script>
+</%def>
+<%def name="script()">
+<script type="text/javascript">
+$(function(){
+	$("#dvalue").focus(function(){
+			if($(this).val() == "输入天数")
+				$(this).val("");
+		});
+	$("#dvalue").blur(function(){
+		if($(this).val() == ""||$(this).val() == null)
+			$(this).val("输入天数");
+	});
+});
+</script>
+</%def>
+
+		<%def name="linkguide()">
+		<p class="pageguide"><a href="/">首页</a>&nbsp;&gt;&gt;&nbsp;<a href="/list/realtime">监控</a>&nbsp;&gt;&gt;&nbsp;<a href="/daily_report/lookup_system">Report</a>&nbsp;&gt;&gt;&nbsp;${c.t2} ( ${c.rdate[6]}--${c.rdate[0]} ) </p>
+		</%def>
+			<div id="chartwrap">
+				% for x in c.rdate:
+				<dl class="dl1 floatl">
+					<dt>${x}</dt>
+					<dd class="dd2 floatl">
+						
+						<a class="largeimg floatl" href="/view/data/${c.t1}?d=${x}"><img _lazysrc="${c.imgpath}/view/graph/${c.t1}/0/0000-00-00/${x}/1.png" alt="${c.t2}" /></a>
+						
+						<p class="fguide">
+								
+								<a class="fl a2" href="${c.imgpath}/view/graph2/${c.t1}/0/${x}/7126x650/2.png" title="放大">放大</a>
+								<a class="fl a3" href="/view/data/${c.t1}?d=${x}" title="单页">单页</a>
+							
+						</p>
+					</dd>
+				</dl>
+				% endfor
+			</div>
+			<%def name="toolbox()">
+				<div class="slidebar">
+					<h3 class="sbartitle">工具箱</h3>
+					<form action="/list/realtime" method="get" >
+						<input id="dvalue" type="text" value="输入天数" name="dys"/>&nbsp;<input type="submit" value="GO" />
+						<input type="hidden" name="typeid" value="${c.t1}" />
+						<input type="hidden" name="typename" value="${c.t2}">
+						<input type="hidden" name="odate" value="${c.odate}">
+						<input type="hidden" name="viewmdays" />
+					</form>
+				</div>
+			
+			</%def>
+	
+<%def name="bodyscript()">
+<script>
+function lazy(){
+var lazy = new ImagesLazyLoad({
+		container: window, mode: "vertical",
+		holder: "/img/o_dot.gif"
+	});
+}
+lazy();
+</script>
+</%def>
+
+<%def name="profile()">
+    <div class="welcome">
+    	% if not request.environ.get('REMOTE_USER'):
+	  		<a href="/signin" class="login">登录</a>
+		% else:
+	  		你好，${request.environ['REMOTE_USER']} <a href="/signout">退出</a> | <a href="/template">配置</a> 
+		% endif
+    </div>
+</%def>

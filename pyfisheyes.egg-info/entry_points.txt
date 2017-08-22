@@ -1,0 +1,13 @@
+
+    [paste.app_factory]
+    main = pyfisheyes.config.middleware:make_app
+
+    [paste.app_install]
+    main = pylons.util:PylonsInstaller
+
+    [paste.filter_app_factory]
+    gzip = pyfisheyes.lib.middleware:make_gzip_middleware
+
+    [paste.filter_factory]
+    gzip = pyfisheyes.lib.middleware:make_gzip_middleware_filter
+    

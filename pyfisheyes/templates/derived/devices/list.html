@@ -1,0 +1,77 @@
+<%inherit file="/base/index.html"/>
+<%namespace name="pagination" file="/component/pagination.html" import="*" />
+<%namespace name="search" file="/component/search.html" import="*" />
+<%def name="heading()"><h1 class="heading">${c.heading}</h1></%def>
+<%def name="title()">${c.pagename}</%def>
+
+${pagination.pagin(c, False)}
+<table class="atable" cellspacing="0" border="0" cellpadding="0" id="deviceList">
+<thead>
+<tr>
+	
+	<th>主机名</th><th>CPU</th><th>内存</th><th>磁盘</th><th>型号</th><th>内核</th>
+	
+	
+</tr>
+</thead>
+<tbody>
+% for x,d in enumerate(c.rows):
+	<tr>
+		<td><a class='link' href="/devices/deviceItems?dsn=${d.serial_no}&dn=${d.hostname}">${d.hostname}</a></td>
+		<td>${d.cpuinfo}</td>
+		<td>${d.memsize}</td>
+		<td>${d.diskspace}</td>
+		<td>${d.hardware}</td>
+		<td>${d.kernel_info}</td>
+		
+	</tr>
+% endfor
+</tbody>
+</table>
+${pagination.pagin(c, False)}
+
+
+<%def name="toolbox()">
+
+${search.device_finder("/devices", "get", c.ds)}
+	
+</%def>
+<%def name="script()">
+<script type="text/javascript" src="/jquery/js/jquery-1.6.2.min.js"></script>
+<script type="text/javascript">
+$(function(){
+$("#deviceList tbody tr").hover(function(){
+	$(this).children('td').css({'background-color':'#A6BAA6',cursor:'pointer',color:'#fff'})
+	
+},function(){
+	$(this).children('td').css({'background-color':'#fff',cursor:'auto',color:'#000'})
+	
+});
+$("#deviceList tbody tr").click(function(){
+	h = $(this).find('.link').attr('href')
+	location.href = h;
+	
+});
+
+
+$("#skey").focus(function(){
+	if ($(this).val() == "请输入主机名或IP或负责人"){
+	
+		$(this).val("")
+		$(this).css("color","#000")
+		}
+	
+});
+$("#skey").blur(function(){
+    if($(this).val()==""){
+    	$(this).val("请输入主机名或IP或负责人")
+		$(this).css("color","#ccc")
+			
+        }
+	
+});
+		
+});
+
+</script>
+</%def>

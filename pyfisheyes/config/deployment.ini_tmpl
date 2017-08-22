@@ -1,0 +1,138 @@
+# -*- coding: utf-8 -*-
+#
+# pyfisheyes - Pylons development environment configuration
+#
+[DEFAULT]
+debug = false
+# Uncomment and replace with the address which should receive any error reports
+email_to = tonycai321@gmail.com
+smtp_server = dm.yoursite.com
+error_email_from = noreply@dm.yoursite.com
+#smtp_server = conf.get('smtp_server','localhost')
+###Turbomail StartLine###
+mail.on = true
+mail.manager = immediate 
+mail.demand.threads = 5
+mail.transport = smtp 
+mail.smtp.server = 0.0.0.0
+mail.message.encoding = UTF-8
+mail.utf8qp.on = True
+###Turbomail EndLine###
+upload_dir = %(here)s/storage
+
+[server:main]
+use = egg:Paste#http
+host = 0.0.0.0
+port = 8080
+
+[pipeline:main]
+pipeline = fileupload pyfisheyes
+
+[filter:fileupload]
+use = egg:gp.fileupload
+# temporary directory to write streams to
+tempdir = %(here)s/data/fileupload
+
+# file to inject in the html code
+#include_files = fileupload.css jquery.*
+
+# if you already have jquery in your application, use this line
+include_files = fileupload.css jquery.fileupload.*
+
+# max upload size is 50Mo
+max_size = 50
+upload_to = %(upload_dir)s
+
+# use this options to also wrap your application with a Storage middleware
+#upload_to = %(here)s/storage
+#exclude_paths = /@@
+
+#[app:main]
+[app:pyfisheyes]
+use = egg:pyfisheyes
+full_stack = true
+static_files = true
+
+import_dir = %(here)s/import
+photos_public_dir = attach
+sa_auth.cookie_secret = ${app_instance_secret}
+
+cache_dir = %(here)s/data
+beaker.session.key = pyfisheyes
+beaker.session.secret = somesecret
+app_instance_uuid = ${app_instance_uuid}
+
+my_contacts=tony,jackie
+
+### authkit StartLine ###
+authkit.setup.enable = true
+authkit.setup.method = form, cookie
+authkit.form.authenticate.user.type = authkit.users.sqlalchemy_driver:UsersFromDatabase
+authkit.form.authenticate.user.data = pyfisheyes.model
+authkit.form.authenticate.user.encrypt = authkit.users:md5
+authkit.form.authenticate.user.encrypt.secret = some secret string
+authkit.cookie.secret = secret string
+authkit.cookie.signoutpath = /signout
+authkit.form.template.obj = pyfisheyes.lib.auth:render_signin
+### authkit EndLine ###
+
+# If you'd like to fine-tune the individual locations of the cache data dirs
+# for the Cache data, or the Session saves, un-comment the desired settings
+# here:
+#beaker.cache.data_dir = %(here)s/data/cache
+#beaker.session.data_dir = %(here)s/data/sessions
+
+# SQLAlchemy database URL
+sqlalchemy.url = mysql://pyfisheyes_user:pyfisheyes_password@hostname:port/db_name?charset=utf8&use_unicode=1
+sqlalchemy.pool_recycle = 600
+sqlalchemy.encoding='utf-8'
+
+
+# WARNING: *THE LINE BELOW MUST BE UNCOMMENTED ON A PRODUCTION ENVIRONMENT*
+# Debug mode will enable the interactive debugging tool, allowing ANYONE to
+# execute malicious code after an exception is raised.
+#set debug = false
+
+
+# Logging configuration
+[loggers]
+keys = root, routes, pyfisheyes, sqlalchemy
+
+[handlers]
+keys = console
+
+[formatters]
+keys = generic
+
+[logger_root]
+level = INFO
+handlers = console
+
+[logger_routes]
+level = INFO
+handlers =
+qualname = routes.middleware
+# "level = DEBUG" logs the route matched and routing variables.
+
+[logger_pyfisheyes]
+level = DEBUG
+handlers =
+qualname = pyfisheyes
+
+[logger_sqlalchemy]
+level = INFO
+handlers =
+qualname = sqlalchemy.engine
+# "level = INFO" logs SQL queries.
+# "level = DEBUG" logs SQL queries and results.
+# "level = WARN" logs neither.  (Recommended for production systems.)
+
+[handler_console]
+class = StreamHandler
+args = (sys.stderr,)
+level = NOTSET
+formatter = generic
+
+[formatter_generic]
+format = %(asctime)s,%(msecs)03d %(levelname)-5.5s [%(name)s] [%(threadName)s] %(message)s
+datefmt = %H:%M:%S

@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="refresh" content="60" />
+<title>report</title>
+<link type="text/css" href="/jquery/css/pepper-grinder/jquery-ui-1.8.8.custom.css" rel="stylesheet" />
+<link href="/css/report.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+*{
+font-size:14px;
+}
+img{
+margin:5px 0;
+}
+.left{
+float:left;
+}
+.left input,.left select{
+float:left;
+margin-left:10px;
+display:inline;
+}
+.right{
+float:right
+}
+.right input{
+float:left;
+margin-right:10px;
+display:inline;
+}
+</style>
+</head>
+<body>
+<div style="padding:5px 0px;position:fixed;background-color:#aaa;width:100%;font-size:14px;text-align:center;vertical-align:middle;">
+<div class="left" style="float:left">
+ <input id="back" type="button" value=" 返回 " style="float:left"/>
+ <select id="items" style="width:100px;float:left;"><option value='loadavg' selected>load</option><option value='util'></>Utilization</option></select>
+ <span style="line-height:25px;margin-left:5px;display:inline;color:#fff;"> 时间：${c.rtime}</span>
+</div>
+<div class="right" style="float:right;">
+ <input id='value' type="text" value='${c.dname}' />
+ <input id='search' type="button" value=" 搜索 "/>
+ <input id='clear' type="button" value=" 清除 " style="display:none;"/>
+</div>
+</div>
+<div style="text-align:justify;padding:10px;padding-top:43px;">
+%for x,t in enumerate(c.rows):
+<a href="/devices/deviceItems?dsn=${t.dsn}&dn=${t.dname}#${t.id}" title="${t.dname} ${t.rank}"><img id='img_${x+1}' src='/devices/realtimeview/${t.id}/${t.dname}/${t.ditem}/${t.max_value}/12.png?${c.reflash}' /></a>
+%endfor
+</div>
+<!-- 
+<script type="text/Javascript" src="/js/cdjcv.js"></script>
+
+<script>
+// The followings is executed once every second
+
+function updateDisplay()
+{
+    if (window.JsChartViewer)
+        for(x=1; x<=${c.total};x++)
+        JsChartViewer.get('img_'+x).streamUpdate();
+}
+window.setInterval("updateDisplay()", 60000);
+</script>
+ -->
+ <script type="text/javascript" src="/jquery/js/jquery-1.6.2.min.js"></script>
+ <script type="text/javascript">
+$(function(){
+$('#items').change(function(){
+    item = $(this).val()
+    location.href="/devices/devicerealtime?hn=${c.dname}&item="+item
+});
+ clear();
+ $('#items').val('${c.ditem}');
+ $('#search').click(function(){
+
+		if ($('#value').val())
+		location.href="/devices/devicerealtime?item=${c.ditem}&hn="+$('#value').val()
+	});
+$('#back').click(function(){
+     location.href="/devices"
+	
+});
+$('#value').keypress(function(){
+
+	clear();
+});
+ 
+});
+
+function clear(){
+
+	if ($('#value').val())
+        $("#clear").show()
+	else
+	    $("#clear").hide()
+	
+}
+ </script>
+</body>
+</html>

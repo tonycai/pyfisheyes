@@ -1,0 +1,171 @@
+﻿*{
+margin:0;
+padding:0;
+font-size:12px;
+}
+a:link {
+	padding: 0 0 1px 0;
+	font-weight: normal;
+	text-decoration: none;
+	color: #900;
+	}
+a:visited {
+    color: #700;
+	font-weight: normal;
+	text-decoration: none;
+    }	
+a:hover {
+	color: #f00;
+	font-weight: normal;
+	text-decoration: underline;
+	}
+a:active {
+	padding: 0 0 1px 0;
+	font-weight: normal;
+	text-decoration: none;
+	color: #900;
+	}
+ul{
+list-style:none;
+}
+.wrap{
+margin:0 auto;
+padding:0 5px;
+}
+.top{
+height:24px;
+width:100%;	
+}
+.navbar{
+float:left;
+width:350px;
+height:100%;
+display:inline; /*ie6下双间距问题*/
+line-height:24px;
+}
+.navbar a{
+display:inline-block;
+margin:0 2px;
+}
+.updatetime{
+display:block;
+float:left;
+line-height:24px;
+margin-left:5px;
+width:97px;
+height:100%;
+}
+.searchwrap{
+float:right;
+display:inline;   /*ie6下双间距问题*/
+height:100%;
+padding-right:100px;
+}
+.searchform{
+float:left;
+}
+.searchkey{
+width:160px;
+}
+.hotkey{
+line-height:24px;
+margin-left:10px;
+width:220px;
+heihgt:24px;
+overflow:hidden;
+}
+.checkwrap{
+clear:both;
+text-align:left;
+height:22px;
+}
+.checkwrap input{
+margin-right:5px;
+}
+.chartwrap{
+clear:both;
+}
+.chartlist{
+text-align:center;
+}
+.chartlist li{
+height:180px;
+width:306px;
+float:left;
+*display:inline;
+*zoom:1;
+margin: 6px 2px 0px 2px;
+overflow:hidden;
+}
+.chartlist li.special{
+width:606px;
+height:260px;
+}
+.chatname{	
+border-top: 1px solid #ccc;	
+border-left: 1px solid #ccc;	
+border-right: 1px solid #ccc;	
+background-color:#eee;
+padding:0 3px;
+margin: 0px 2px 0px 2px;
+font-weight:400;
+text-align:center;
+font-size:12px;
+height:15px;
+line-height:15px;
+width:294px;
+position:relative;
+}
+.chatname_s{
+width:594px;
+}
+.sn{
+position:absolute;
+left:2px;
+font-weight:700;
+color:#000066;
+}
+.sn2{
+text-align:center;
+width:92%;
+}
+.imgbox img {
+border: 1px solid #ccc;	
+margin: 0px 2px 5px 2px;
+width:300px;
+height:160px;
+background:url(../img/o_loading.gif) no-repeat center center transparent;
+}
+.imgbox img.special{
+width:600px;
+height:240px;
+}
+.clear{
+width:0;height:0;font-size:0;line-height:0;
+}
+.floatl{
+float:left;
+}
+.clickbar{
+width:60px;
+height:34px;
+padding-top:12px;
+line-height:18px;
+text-align:center;
+background:url(/img/image-click.jpg) no-repeat right top transparent;
+color:#fff;
+position:fixed;
+right:0;
+top:0;
+cursor:pointer;
+z-index:99;
+}
+.hidden{
+display:none;
+}
+.header{
+display:none;
+}
+.show{
+display:block;
+}

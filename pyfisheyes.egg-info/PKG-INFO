@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: pyfisheyes
+Version: 0.1dev-r720
+Summary: Site System Operatein Data Analysis
+Home-page: http://tonynotes.com
+Author: tonycai
+Author-email: tonycai321@gmail.com
+License: BSD
+Description: UNKNOWN
+Keywords: pylons wsgi site system data analysis for ops-team
+Platform: UNKNOWN

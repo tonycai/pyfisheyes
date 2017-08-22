@@ -1,0 +1,202 @@
+<%namespace name="search" file="/component/search.html" import="*" />
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+ 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"> 
+<head>
+<style type="text/css">
+<!-- @import url(/gp.fileupload.static/fileupload.css); -->
+</style> 
+  	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> 
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" /> 
+	<link href="/css/realtime.css" rel="stylesheet" type="text/css" />
+  	<title>pyfisheyes - Realtime</title> 
+	<meta name="keywords" content="pyfisheyes" /> 
+	<meta name="description" content="" /> 
+	% if hasattr(c,"refresh") and c.refresh and c.disrf=='false':
+		<meta http-equiv="refresh" content="10" />
+	% endif		
+<style type="text/css">
+*html,*html body{background-image:url(about:blank);background-attachment:fixed;}
+
+*html .clickbar{position:absolute;right:auto;left:expression(eval(document.documentElement.scrollLeft+document.documentElement.clientWidth-this.offsetWidth)-(parseInt(this.currentStyle.marginLeft,10)||0)-(parseInt(this.currentStyle.marginRight,10)||0));}
+.alert{
+background-color:yellow;
+}
+</style>
+<script src="/jquery/js/jquery-1.4.4.min.js" type="text/javascript"></script>
+<script src="/js/CJL.0.1.min.js"></script>
+<script src="/js/LazyLoad.js"></script>
+<script src="/js/lazyLoadImg.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+</head> 
+<body>
+<div class="clickbar" id="oClick">点击显示</div>
+<div class="wrap">
+	
+	<div id="rtimeHeader" style="padding-top:5px;display:none;">
+		<div class="top">
+			<p class="navbar">
+				<a href="/">首页</a>
+				<a href="/list/day">每天</a>
+				<a href="/list/hour">小时</a>
+				<a href="/list/host">分组</a>
+				<a href="/list/realtime">监控</a>
+				<a href="/devices">主机</a>
+				<a href="/events">事件</a>
+				<a href="/alert">报警</a>
+				<a href="/contacts">联系人</a>
+				<a href="#" onclick="javascript:void(0);">过滤</a>	
+			</p>
+			<span class="updatetime">更新: ${c.currentdatetime}</span><span class="updatetime">共计: ${c.count}条</span>
+			<!-- 头部搜索框 -->
+			${search.bar("/list/realtime", c.view_mode)}
+		</div>
+		<div class="checkwrap">
+		% for typecode_k, typecode_v in c.r_typecode.iteritems():
+				%if typecode_v in c.filter_list:
+					<input type="checkbox" name="filter" id="filter_${typecode_v}"  value="${typecode_v}" checked="checked"/><label for="filter_${typecode_v}">${typecode_k}</label>
+				% else:
+					<input type="checkbox" name="filter" id="filter_${typecode_v}"  value="${typecode_v}"  /><label for="filter_${typecode_v}">${typecode_k}</label>
+				% endif
+		% endfor
+		</div>
+	</div>
+	<div class="chartwrap">
+		<ul class="chartlist" id="chartlist">
+		% for x,t in enumerate(c.rows):
+			%if t.alertlevel == 2 and t.r_weight > 5:
+			<li>
+				<p class="chatname alert">
+						<span class="sn">#${t.typeid}</span>
+						% if c.sw:
+							<span class="sn2">${t.search_highlight(c.sw)}</span>
+						% else:
+							<span class="sn2">${t.typename}</span>
+						% endif			
+				</p>
+				<div class="imgbox">
+					<a href="/view/data/${t.typeid}?s=${c.sw}">
+					
+					<!-- <img alt="${t.typename}" _lazysrc="${h.url_for('/view/realtimegraph/'+str(t.typeid),host='')}/1.png"/>  -->
+					
+					<img class="alert" alt="${t.typename}" _lazysrc="${c.imgpath}/view/realtimegraph/${t.typeid}/1.png"/>
+					</a>
+				</div>
+			</li>
+			%endif
+		%endfor
+		% for x,t in enumerate(c.rows):	
+			%if t.alertlevel !=2 or t.r_weight <= 5:
+			<li>
+				<p class="chatname">
+						<span class="sn">#${t.typeid}</span>
+						% if c.sw:
+							<span class="sn2">${t.search_highlight(c.sw)}</span>
+						% else:
+							<span class="sn2">${t.typename}</span>
+						% endif			
+				</p>
+				<div class="imgbox">
+					<a href="/view/data/${t.typeid}?s=${c.sw}">
+					
+					<!-- <img alt="${t.typename}" _lazysrc="${h.url_for('/view/realtimegraph/'+str(t.typeid),host='')}/1.png"/>  -->
+					
+					<img alt="${t.typename}" _lazysrc="${c.imgpath}/view/realtimegraph/${t.typeid}/1.png"/>
+					</a>
+				</div>
+			</li>
+			%endif
+		% endfor
+		</ul>
+	</div>
+</div>
+<script>
+function lazy(){
+var lazy = new ImagesLazyLoad({
+		container: window, mode: "vertical",
+		holder: "/img/o_dot.gif"
+	});
+}
+lazy();
+</script>
+<script type="text/javascript"> 
+	var filter = "";	
+	$("document").ready(function(){
+		slide();
+		var disrf = $.cookie("disrf");
+		if(disrf == 'true'){
+			document.getElementById("disreflash").checked=true;
+		}else{
+			document.getElementById("disreflash").checked=false;
+			document.getElementById("disreflash").defaultChecked=false;
+		}
+		/*hidden line*/
+		  $("[name='filter']").bind("click",function(){
+			  filter="";
+				  $("[name='filter']").each(function(){
+						if ($(this).attr("checked")==true){
+								if (filter==""){
+									filter=$(this).val();
+								}
+								else
+								{
+									filter+=","+$(this).val();
+								}
+						}
+				    })
+				  if (filter == ""){filter=0}
+				  
+				  filterSelect(filter);
+			  });
+			/*$("#oClick").toggle(function(){
+				$("#rtimeHeader").slideDown();
+				$(this).html("点击隐藏");
+			},function(){
+				$("#rtimeHeader").slideUp();
+				$(this).html("点击显示");
+			});*/
+			
+			
+			$("#oClick").click(function(){
+					if($("#rtimeHeader").css("display") == "none")
+					{
+						$("#rtimeHeader").slideDown();
+					    $(this).html("点击隐藏");
+					    $.cookie('sk','true');
+					}
+					else
+					{
+						$("#rtimeHeader").slideUp();
+					    $(this).html("点击显示");
+					    $.cookie('sk','false');
+					}
+				});
+			$("#disreflash").click(function(){
+					if (document.getElementById("disreflash").checked==true){
+						$.cookie("disrf",true);
+						}else{
+							$.cookie("disrf",false);
+					}
+					location.reload();
+					
+				});
+	});
+	function filterSelect(fi) {
+		  	
+		  		window.location = "?montoring=1&filter="+ fi; 
+		  	
+	}
+	function slide(){
+		
+		if($.cookie('sk') == 'true'){
+				$("#rtimeHeader").show();
+				$("#oClick").html("点击隐藏");
+		}else{
+				$("#rtimeHeader").hide();
+				$("#oClick").html("点击显示");
+		}
+	}
+	
+</script> 
+</body>
+</html>

@@ -1,0 +1,74 @@
+<%inherit file="/base/index.html"/>
+<%namespace name="pagination" file="/component/pagination.html" import="*" />
+
+<%def name="heading()"><h1 class="heading">${c.heading}</h1></%def>
+
+${pagination.pagin(c, False)}
+
+
+<table class="atable" cellspacing="0" border="0" cellpadding="0">
+
+<tr>
+<td>编号</td>
+<td width="35%">名称</td>
+<td width="30%">状态</td>
+<td width="5%">权重</td>
+<td>日期时间</td>
+</tr>
+% for x,a in enumerate(c.rows):
+	<tr>
+		<td><a href="/alert/list?qw=${a.t_name_urlencode()}">#${a.id}</a></td>
+		<td><a href="/view/data/${a.tid}/1/${a.datei}/${a.datei}">${a.t_name}</a></td>
+		<td>${"[" + a.a_level[0:1] + "] " + a.t_status}</td>
+		<td>${a.r_weight}</td>
+		<td>${a.logtime}</td>
+	</tr>
+% endfor
+</table>
+
+
+${pagination.pagin(c, False)}
+
+<%def name="toolbox()">
+	<div class="slidebar">	
+		<h3 class="sbartitle">${"Search"}</h3>	
+		<form action="/alert/list" method="post">
+		
+		% if c.qw == "nothing":
+		<input type="text" name="qw" value="" />
+		% else:
+		<input type="text" name="qw" value="${c.qw}" />
+		% endif
+		<input name="submit" type="submit" value="Go" />
+		
+		</form>
+	</div>
+	
+	<div class="slidebar">	
+			<h3 class="sbartitle">${"usefully"}</h3>
+			<p>
+				<a href="/alert/list?qw=mysql">mysql</a> 
+				<a href="/alert/list?qw=vpn">vpn</a>
+				<a href="/alert/list?qw=cdn">cdn</a> 
+				<a href="/alert/list?qw=solr">solr</a>
+				<a href="/alert/list?qw=实时请求">实时请求</a>  
+				<a href="/alert/list?qw=实时慢请求">实时慢请求</a>  
+				<a href="/alert/list?qw=connections">connections</a>
+				<a href="/alert/list?qw=cache">cache</a>
+				<a href="/alert/list?qw=release">release</a>
+				<a href="/alert/list?qw=yoursite">yoursite</a>  
+				<a href="/alert/list?qw=yoursite1">yoursite1</a>  
+				<a href="/alert/list?qw=yoursite2">yoursite2</a>  
+				<a href="/alert/list?qw=500">500</a>  
+			</p>
+	</div>
+	
+	<div class="slidebar">	
+		<h3 class="sbartitle">${"Assistant"}</h3>	
+		<ul class="sbarlist">
+			<li><a href="/events/new">New Event</a></li>
+		</ul>	
+	</div>
+	
+	
+</%def>

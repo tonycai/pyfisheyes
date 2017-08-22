@@ -1,0 +1,180 @@
+<%inherit file="/base/index.html"/>
+
+<%def name="head_tags()">
+${h.javascript_link(h.url_for('/jquery/js/jquery-1.4.4.min.js'))}
+</%def>
+
+<%def name="script()">
+<script type="text/javascript">
+function validate(){
+    // 验证必填项是否存在
+	  $(".require").each(function(){
+				if($(this).val() == ''){
+			   			$("#error").html("内容不能为空!").addClass("error");
+			   		}
+				else if	($(this).val().length > 100){
+		   			$("#error").html("内容过长!").addClass("error");
+		   		}
+				else{
+					$("#error").html("(内容长度1~100个字符)").removeClass("error");
+					}
+		});
+		if($(".error").length > 0){
+			return false;
+			
+		}else{
+			return true;
+			
+		}
+
+} 
+</script>
+</%def>
+
+<%def name="heading()">
+<h1>${c.heading}
+<%doc>% if request.environ.get('REMOTE_USER'):</%doc>
+<a style="" href="/events/edit/${c.event.id}">Edit</a>
+<%doc>% endif</%doc>
+</h1>
+</%def>
+
+
+
+<%def name="toolbox()">
+	<div class="slidebar">	
+		<h3 class="sbartitle">${"Assistant"}</h3>	
+		<ul class="sbarlist">
+			<li><a href="" class="back">Back</a></li>
+		</ul>	
+	</div>
+</%def>
+
+<table class="detail_event_t" cellspacing='0'>
+<tr><th>主题</th><td>${c.event.evtitle} @${str(c.event.evdate)[0:10]} #${c.event.id}</td></tr>
+<tr><th>标签</th><td>${c.event.evtags}</td></tr>
+<tr><th>发生时间</th><td>${str(c.event.evdate)[0:16]}</td></tr>
+<tr><th>发现时间</th><td>${str(c.event.dt2)[0:16]}</td></tr>
+<tr><th>找到方向</th><td>${str(c.event.dt3)[0:16]}</td></tr>
+<!-- <tr><th>事件解决时间</th><td>${str(c.event.dt4)[0:16]}</td></tr> -->
+<tr><th>最后修改时间</th><td>${c.event.evlastedit}</td></tr>
+<tr><th>内容</th><td>${c.event.getEvContent()}</td></tr>
+<tr><th>事件图片</th><td>
+% for x,g in enumerate(c.graphs):
+%if g.imgid:
+<a href="/view/data/${g.imgid}?d2=${str(c.event.evdate)[0:10]}">${g.imgid}</a>&nbsp;
+%endif
+%endfor
+</td></tr>
+<tr><th>记录人</th><td>${c.event.creator}</td></tr>
+<!-- 
+
+<tr><th>type</th><td>${c.event.evtype}</td></tr>
+% if c.event.evtype == "Failure":
+<tr><td colspan='2'>
+<p>
+	<strong>status:</strong> ${c.event.evstatus} 
+	<strong>cause:</strong> ${c.event.evcause} 
+	<strong>minutes:</strong> ${c.event.evminutes} 
+	</p>
+	<p>
+	<strong>losspv:</strong> ${c.event.evlosspv} 
+	<strong>domain:</strong> ${c.event.evdomain} 
+	<strong>reporter:</strong> ${c.event.evreporter} 
+	</p></td>
+	</tr>
+% endif
+
+ -->
+
+
+
+</table>
+
+
+
+<!--  
+<div style="border-top:1px solid #ccc;">
+<div style="line-height:24px;">
+<h2 id="card-short-description" style="line-height:25px;">
+${c.event.evtitle} @${c.event.evdate} #${c.event.id}
+</h2>
+
+<p><strong>tags:</strong> ${c.event.evtags}</p>
+<p><strong>modified:</strong> ${c.event.evlastedit}</p>
+</div>
+
+<div class="card_cantain" style="PADDING-RIGHT:10px;OVERFLOW-Y:auto;PADDING-LEFT:10px;SCROLLBAR- FACE-COLOR:#ffffff;FONT-SIZE:11pt;PADDING-BOTTOM:0px;SCROLLBAR- HIGHLIGHT-COLOR:#ffffff;OVERFLOW:auto;WIDTH:100%;SCROLLBAR-SHADOW- COLOR:#919192;SCROLLBAR-3DLIGHT-COLOR:#ffffff;LINE- HEIGHT:100%;SCROLLBAR-ARROW-COLOR:#919192;PADDING-TOP:0px;SCROLLBAR- TRACK-COLOR:#ffffff;SCROLLBAR-DARKSHADOW- COLOR:#ffffff;LETTER-SPACING:1pt;TEXT-ALIGN:left">
+${c.event.getEvContent()}
+</div>
+
+<div style="line-height:24px;">
+<p class="graphlist"><strong>graphs: </strong>
+% for x,g in enumerate(c.graphs):
+%if g.imgid:
+<a href="/view/data/${g.imgid}?d2=${c.event.evdate}">${g.imgid}</a>&nbsp;
+%endif
+%endfor
+
+</p>
+<p><strong>type:</strong>${c.event.evtype}</p>
+% if c.event.evtype == "Failure":
+	<p>
+	<strong>status:</strong> ${c.event.evstatus} 
+	<strong>cause:</strong> ${c.event.evcause} 
+	<strong>minutes:</strong> ${c.event.evminutes} 
+	</p>
+	<p>
+	<strong>losspv:</strong> ${c.event.evlosspv} 
+	<strong>domain:</strong> ${c.event.evdomain} 
+	<strong>reporter:</strong> ${c.event.evreporter} 
+	</p>
+% endif
+</div>
+
+<%doc> % if request.environ.get('REMOTE_USER'): </%doc>
+	<div>
+	<p><a href="/events/edit/${c.event.id}">${"Edit"}</a>
+	</p>
+	</div>
+
+
+
+</div>
+-->
+<div class="notice" style="margin-top:10px;">
+	<div style="float:right;padding-bottom:10px;color:#777"><a href="#addmsgform">回复</a></div>
+  <ol style="clear:both;">
+  	% for x,m in enumerate(c.messages):
+  	<li>
+  		<div class="userinfo">
+  			<img alt="tony" src="http://192.168.1.118:40080/statusnet-0.9.5/avatar/1-48-20101101075218.png" /><div class="name">guest</div>
+  		</div>
+  		<div class="right">
+  	
+			  	<p class="p1" ><span class="fw">${m.msgsubject}</span></p>
+			  	<p class="p2" >发表于：${m.msgdate}</p>
+			  	<p class="p3">${m.msgcontent}</p>
+  		</div>
+  	</li>
+  	%endfor
+  </ol>
+</div>
+<div class="addmsg">
+	<h3><a name="addmsgform">回复</a></h3>
+	<form action="/events/addmsgsubmit" method="post" onsubmit="return validate()">
+		<!-- <div class="row"><label>标题：</label><input type="text" class="require" id="addmsgS" name="msgsubject"/></div> -->
+		<div class="row"><label>内容：</label><textarea class="require" id="addmsgC" name="msgcontent"></textarea></div>
+		<input type="hidden" value="${c.event.id}" name='eventid' />
+		<input type="submit" value="提交" style="margin-left:50px;"/> <span id="error">(内容长度1~200个字符)</span>
+	</form>
+</div>
+
+<%def name="toolbox()">
+	<div class="slidebar">	
+		<h3 class="sbartitle">${"Assistant"}</h3>	
+		<ul class="sbarlist">
+			<li><a href="/events/new">New Event</a></li>
+		</ul>	
+	</div>
+</%def>

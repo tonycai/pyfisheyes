@@ -1,0 +1,96 @@
+## -*- coding: utf-8 -*-
+<%namespace name="navigation" file="/component/navigation.html" import="*" />
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+
+  	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  	<title>pyfisheyes - ${self.title()}</title>
+	<meta name="keywords" content="pyfisheyes" />
+	<meta name="description" content="" />
+	<!--[if gte IE 8]><!-->
+	
+	${h.stylesheet_link(h.url_for('/css/report.css'))}
+	<link type="text/css" href="/jquery/css/pepper-grinder/jquery-ui-1.8.8.custom.css" rel="stylesheet" />
+	<!--<![endif]-->
+	
+	${self.head_tags()}
+	${self.script()}
+	${self.style()}
+	
+	<!--[if lt IE 8]>
+<p style="background-color:#FFC;"><em>你竟然用IE浏览器！！！伤心。页面裸奔抗议。请换个：</em><a href="http://firefox.com.cn/download/" target="_blank">http://firefox.com.cn/download/
+</a></p>
+<![endif]-->
+</head>
+<body>
+
+<div class="wrap">
+
+	<div class="header">
+	    <div class="header_top">
+			<a href="/" class="logo"><img src="/img/logo2.png" alt="logo" height="50px"/></a>
+			${self.profile()}
+		</div>
+	
+	   <!-- <div id="description">{toolkit}</div> --> 
+	    % if hasattr(c,'pagename') and c.pagename:
+			${navigation.menu(c.pagename)}
+		% else:
+			${navigation.menu("")}
+		% endif
+	    
+	</div><!-- end header -->
+	${self.linkguide()}
+	<div class="main">
+	    <div class="main_left">
+		    	${self.heading()}
+				${next.body()}
+	    </div> <!-- end #content-inner, #content -->
+		<div class="main_right">	
+			${self.toolbox()}	
+		</div> <!-- end #sidebar -->
+	</div> <!-- end main -->
+
+	<div class="footer">
+	    <div class="footer_pypowered"><a href="http://www.python.org/" title="The Python Language Site"><img src="/img/python-logo.gif" width="88" height="30" alt="Python" class="pypowered" /></a></div>
+	    <p class="copyright">Website content copyright &copy; by YourSiteInc-OPSTeam. All rights reserved. tonycai321(&amp;)gmail.com</p>
+	</div>
+
+
+</div> <!-- end wrap --> 
+${self.bodyscript()}
+</body>
+</html>
+
+<%def name="profile()">
+    <div class="welcome">
+    	% if not request.environ.get('REMOTE_USER'):
+	  		<a href="/signin" class="login">登录</a>
+		% else:
+	  		你好，${request.environ['REMOTE_USER']} <a href="/signout">退出</a> | <a href="/template">配置</a> 
+		% endif
+    </div>
+</%def>
+<%def name="style()"></%def>
+<%def name="linkguide()"></%def>
+
+<%def name="title()"></%def>
+
+<%def name="head_tags()"></%def>
+
+<%def name="script()"></%def>
+
+<%def name="toolbox()">
+	<div class="slidebar news">	
+		<h3 class="sbartitle">工具箱</h3>	
+		<ul class="sbarlist">
+			<li><a href="#">item</a></li>
+		</ul>	
+	</div>
+</%def>
+<%def name="bodyscript()"></%def>
+<%def name="heading()"></%def>

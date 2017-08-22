@@ -1,0 +1,14 @@
+Pylons>=1.0
+SQLAlchemy==0.5.8
+Mako>=0.2.2,<=0.4.1
+FormBuild>=2.0.1,<=2.0.99
+AuthKit>=0.4.3,<=0.4.99
+textile>=2.1.4
+TurboMail>=3.0.3
+gp.fileupload>=1.0,<=1.0.99
+
+[PostgreSQL]
+psycopg2
+
+[MySQL]
+mysql-python>=1.2

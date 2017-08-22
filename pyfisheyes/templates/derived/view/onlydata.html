@@ -1,0 +1,96 @@
+<%namespace name="pagination" file="/component/pagination.html" import="*" />
+
+${pagination.pagin(c, True)}
+
+<div class="viewdata">
+	<table>
+		<tr>
+		% if c.pagename == "realtime" :
+			<th width="30">${u"编号"}</th>
+			<th>${u"日期"}</th>
+			<th>${u"小时"}</th>
+			<th>${u"分钟"}</th>
+			<th>${u"键值"}</th>		
+		% else:
+			<th>N</th>
+			% for y,item in enumerate(c.items):
+				<th>${item}</th>
+			% endfor
+		% endif
+		</tr>	
+		% for y,row in enumerate(c.rows):
+			% if c.pagename == "realtime" :
+					<tr>
+						<td>${y+1}</td>				
+						<td>${row.datei}</td>				
+						<td>${row.houri}</td>
+						<td>${row.minutei}</td>
+						<td><a onclick="load_logstuff('/logstuffshow/index/${row.tid}/${row.datei}/${str(row.logtime)[11:]}')">${row.valuei}</a></td>
+					</tr>
+			% else:
+					<tr>
+						<td>${y+1}</td>	
+						% for x,opt in enumerate(row.tostringlist()):				
+							<td>${opt}</td>				
+						% endfor
+					</tr>
+			% endif
+		% endfor
+	</table>
+</div>
+${pagination.pagin(c, True)}
+<script type="text/javascript">
+$(function(){
+	var src = $("#img").attr("src");
+	$("#ysizeok").click(function(){
+		    var graphs = $("#img");
+		    var img1 = $("#imglink");
+		    var img2 = $(".scale");
+		    var img3 = $(".zoomWrapperImage");
+			var ysize = parseInt($("#ysize").val());
+			if(ysize){
+				var src2 = $("#imglink").attr("href");
+					var index = src.lastIndexOf("?");
+					var index2 = src.lastIndexOf("?ys=");
+					var index3 = src.lastIndexOf("&ys=");
+					var oindex1 = src2.lastIndexOf("?");
+					var oindex2 = src2.lastIndexOf("?ys=");
+					var oindex3 = src2.lastIndexOf("&ys=");
+					if (index == -1 ){
+						var src2 = src2+"?ys="+ysize;
+						$(graphs).attr("src",src+"?ys="+ysize);
+						$(img1).attr("href",src2);
+						$(img2).css("background-img","url("+src2+")");
+						$(img3).attr("src",src2);
+					}
+					else if(index2 != -1){
+						str1 = src.substring(0,index2)+src.substr(index2,4)+ysize;
+						str11 = src2.substring(0,index21)+src2.substr(index21,4)+ysize;
+						$(graphs).attr("src",str1);
+					}else if(index3 != -1){
+						str2 = src.substring(0,index3)+src.substr(index3,4)+ysize;
+						str22 = src2.substring(0,index31)+src2.substr(index31,4)+ysize;
+						$(graphs).attr("src",str2);						
+					}else{
+						$(graphs).attr("src",src+"&ys="+ysize);
+					}
+					
+				}
+			
+			
+		});
+	$("#ysizeclear").click(function(){
+		var graphs = $("#portfolio_0 a img");
+		var src = $(graphs).attr("src");
+		var index2 = src.lastIndexOf("?ys=");
+		var index3 = src.lastIndexOf("&ys=");
+		var str4;
+		if(index2 != -1)
+			str4 = src.substring(0,index2)
+		else if(index3 != -1)
+			str4 = src.substring(0,index3)
+		$(graphs).attr("src",str4);
+			$("#ysize").val("");
+		});
+});
+</script>

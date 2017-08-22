@@ -1,0 +1,47 @@
+<%inherit file="/base/index.html" />
+
+<%def name="heading()">
+  <h1>${c.topic}</h1>
+</%def>
+
+<%def name="toolbox()">
+<div class="box">
+
+<h3>toolbox</h3>
+
+<ul>
+	<li><a href="/categories/add">New Template</a></li>
+	<li><a href="/member/add">New Member</a></li>
+</ul>
+
+</div>
+
+</%def>
+
+<div id="page-area">
+	<table width="100%">
+		<tr>
+		<th>id
+			</th>
+			<th>template
+			</th>
+			<th>type
+			</th>
+			<th>action
+			</th>
+		</tr>	
+		% for row in c.rows:
+			<tr>
+			<td>${row.typeid} </td>
+			<td><a href="/view/data/${row.typeid}">${row.typename}</a></td>
+			<td>${row.graphtype} </td>
+			<td width="20%"><a href="/categories/edit/${row.typeid}">${"Edit"}</a> , <a href="/categories/copy/${row.typeid}">${"Copy"}</a></td>
+			</tr>
+		% endfor
+	
+	</table>
+	${c.rows.pager('Page $page: $link_previous $link_next ~4~')}
+</div>
+
+
+

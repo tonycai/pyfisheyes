@@ -1,173 +1,8 @@
-﻿== 可视化应用监控系统v1.0 ==
-
-使用说明
-
-
-
-下载
-https://sourceforge.net/projects/pyfisheyes/
-
-
-安装 - window
-
-第一步：确定各程序版本
-准备好三个程序,记录请下载windows版的：mod_python mod_python-3.3.1.win32-py2.5-Apache2.2.exe
-		
-		这个程序要看清楚选择，我用的是：mod_python-3.3.1.win32-py2.5-Apache2.2.exe，这个版本需要配套的python2.5(还只能用2.5版，比如说你要是用2.5.2的会出错！)+apache2.2.X
-
-		python python-2.5.msi
-
-		apache httpd-2.2.19-win32-x86-no_ssl.msi
-
-第二步：安装apache
-
-安装python
-
-再安装mod_python，安装过程中会自动寻找python的安装目录,有一个过程是要你选择apache的位置，比如说我的“D:\Program Files\Apache Software Foundation\Apache2.2”。
-
-第三步：安装好上面的三个软件后就要配置Apache来启动mod_python了。
-
-打开Apache安装目录下的conf/httpd.conf，做如下修改：
-
-找到“Dynamic Shared Object (DSO) Support”行，在这下面插入：
-
-LoadModule python_module modules/mod_python.so
-<Directory "D:/Program Files/Apache Software Foundation/Apache2.2/www">
-    AllowOverride FileInfo
-    AddHandler mod_python .py
-    PythonHandler MyTest
-    PythonDebug On
-</Directory> 
-
-第一行是将mod_python.so文件加载进来，可以在modules文件夹下查看到这个文件，安装完mod_python后会生成这个文件。
-第二行 "D:/Program Files/Apache Software Foundation/Apache2.2/www" 为MyTest.py的目录，也是你的文档根目录，我是在Apache2.2下建了一个名为www文件夹，并且将它设为根目录，apache默认的根目录为htdocs。
-要修改为你自已定义的根目录就要将httpd.conf文件夹中：
-
-DocumentRoot "D:/Program Files/Apache Software Foundation/Apache2.2/htdocs"
-
-行修改为：DocumentRoot "D:/Program Files/Apache Software Foundation/Apache2.2/www"
-
-还有别忘了修改下面这行：
-
-找到<Directory "D:/Program Files/Apache Software Foundation/Apache2.2/htdocs">行
-然后将其修改为你的根目录。
-
-第五行中“MyTest” 是缺省的文件，比如说我建的是MyTest.py，你也可以设置为hello.py,但是要将此处改为“PythonHandler hello.py”.
-
-用文本编辑一个python文件命名为：Mytest.py
-
-内容：
-
-from mod_python import apache
-def handler(req):
-    req.write("Hello World!")
-    return apache.OK
-
-第四步：重新启动Apache服务，在浏览器中输入：
-http://localhost/MyTest.py
-如果能看到Hello World！说明mod_python工作正常。
-
-
-注意事项：
-
-将MyTest.py保存为utf-8的文件格式。否则可能会出现找不到MyTest这个handler
-
-每修改httpd.conf重启apache的时候，不要直接重启，要右击“open service”然后从本地服务重启动服务。否则有可能会找不到文件。
-
-
-第五步 安装pylons
-
-C:\Python25\python.exe "D:\virtualenv-1.1\virtualenv.py" C:\env
-
-C:\env\Scripts\easy_install.exe PasteDeploy
-
-C:\env\Scripts\easy_install.exe "Pylons==0.9.7"
-
-C:\env\Scripts\easy_install.exe "SQLAlchemy==0.5"
-
-C:\env\Scripts\paster.exe serve D:\workspace\helloworld\development.ini
-
-C:\env\Scripts\paster.exe --reload D:\workspace\helloworld\development.ini
-
-C:\env\Scripts\activate.bat
-
-cd D:\workspace\
-
-(env) D:\workspace>C:\env\Scripts\paster.exe create -t pylons helloworld_mysql
-Selected and implied templates:
-  pylons#pylons  Pylons application template
-
-Variables:
-  egg:      helloworld2
-  package:  helloworld2
-  project:  helloworld2
-Enter template_engine (mako/genshi/jinja2/etc: Template language) ['mako']:
-Enter sqlalchemy (True/False: Include SQLAlchemy 0.5 configuration) [False]:
-Creating template pylons
-Creating directory .\helloworld2
-  Recursing into +package+
-
-cd helloworld_mysql
-cd D:\workspace\helloworld2\
-C:\env\Scripts\paster.exe serve --reload development.ini
-
-C:\env\Scripts\easy_install.exe "Pylons==0.9.7"
-
-第六步
-
-开机后重启activate.bat：
-打开cmd
-C:\env\Scripts\activate.bat
-
-C:\Documents and Settings\hyhe>C:\env\Scripts\activate.bat
-(env) C:\Documents and Settings\hyhe>D:
-
-(env) D:\>cd workspace
-
-(env) D:\workspace>cd new_project
-
-(env) D:\workspace\new_project>C:\env\Scripts\paster.exe serve --reload development.ini
-
-
-
-安装 – Linux
-源码安装
- $ tar -xzvf pyfisheyes-0.1dev-r388.tar.gz
- $ cd pyfisheyes-0.1dev-r388
-
-$ easy_install .
-Processing .
-Running setup.py -q bdist_egg --dist-dir /home/tonycai/pyfisheyes-0.1dev-r388/egg-dist-tmp-S_jQ1y
-Adding pyfisheyes 0.1dev-r388 to easy-install.pth file
-
-Installed /home/tonycai/pylons/mydevenv/lib/python2.6/site-packages/pyfisheyes-0.1dev_r388-py2.6.egg
-Processing dependencies for pyfisheyes==0.1dev-r388
-Finished processing dependencies for pyfisheyes==0.1dev-r388
-
-
-二进制文件安装
-$ easy_install ./pyfisheyes-0.1dev_r392-py2.6.egg
-Processing pyfisheyes-0.1dev_r392-py2.6.egg
-creating /home/tonycai/pylons/mydevenv/lib/python2.6/site-packages/pyfisheyes-0.1dev_r392-py2.6.egg
-Extracting pyfisheyes-0.1dev_r392-py2.6.egg to /home/tonycai/pylons/mydevenv/lib/python2.6/site-packages
-Removing pyfisheyes 0.1dev-r391 from easy-install.pth file
-Adding pyfisheyes 0.1dev-r392 to easy-install.pth file
-
-Installed /home/tonycai/pylons/mydevenv/lib/python2.6/site-packages/pyfisheyes-0.1dev_r392-py2.6.egg
-Processing dependencies for pyfisheyes==0.1dev-r392
-Finished processing dependencies for pyfisheyes==0.1dev-r392
-
-生成配置文件
-
-$ paster make-config pyfisheyes production.ini
-
-
-代码部分
-
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/__init__.py
 ##########################################
+./build/lib.linux-i686-2.6/pyfisheyes/__init__.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/simplebar.py
@@ -198,6 +33,7 @@ class Simplebar:
 
     def display(self):
         return self.c.makeChart2(PNG)
+./build/lib.linux-i686-2.6/pyfisheyes/model/simplebar.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/__init__.py
@@ -220,10 +56,12 @@ from pyfisheyes.model.fisheyesdb.dateitems import Dateitems
 def init_model(engine):
     """Call me before using any of the tables or classes in the model"""
     Session.configure(bind=engine)
+./build/lib.linux-i686-2.6/pyfisheyes/model/__init__.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/utils/__init__.py
 ##########################################
+./build/lib.linux-i686-2.6/pyfisheyes/model/utils/__init__.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/utils/ContactHandle.py
@@ -278,7 +116,8 @@ class ContactHandle():
         return qw
     
             
-    
+    ./build/lib.linux-i686-2.6/pyfisheyes/model/utils/ContactHandle.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/utils/EventHandle.py
 ##########################################
@@ -373,7 +212,8 @@ class EventHandle():
             events = model.meta.Session.query(model.Events).filter_by(evdate=ds).order_by(ev.id.desc())
         return events
     def isExistEvent(self,ds):
-        return  model.meta.Session.query(model.Events).filter_by(evdate=ds).count()
+        return  model.meta.Session.query(model.Events).filter_by(evdate=ds).count()./build/lib.linux-i686-2.6/pyfisheyes/model/utils/EventHandle.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/utils/GlobalHandle.py
 ##########################################
@@ -473,6 +313,7 @@ class GlobalHandle():
         
         
         return html_content
+./build/lib.linux-i686-2.6/pyfisheyes/model/utils/GlobalHandle.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/utils/ViewHandle.py
@@ -795,6 +636,7 @@ class ViewHandle():
         return int(v/n)
     
 
+./build/lib.linux-i686-2.6/pyfisheyes/model/utils/ViewHandle.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/utils/WebAPI.py
@@ -1007,7 +849,8 @@ class WebAPI():
         if n > 0:
             return True
         else:
-            return False
+            return False./build/lib.linux-i686-2.6/pyfisheyes/model/utils/WebAPI.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/utils/DailyReportHandle.py
 ##########################################
@@ -1115,6 +958,7 @@ class DailyReportHandle():
         )
         return rows
     
+./build/lib.linux-i686-2.6/pyfisheyes/model/utils/DailyReportHandle.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/categories.py
@@ -1153,7 +997,8 @@ class Categories(Base):
         return "<Categories('%s')" % self.typename
     
     def tostring(self):
-        return "Categories('%s','%s','%s','%s','%s','%s','%s','%s')" % (self.typeid,self.typename,self.items,self.titles,self.classname,self.labels,self.disable,self.orderby)
+        return "Categories('%s','%s','%s','%s','%s','%s','%s','%s')" % (self.typeid,self.typename,self.items,self.titles,self.classname,self.labels,self.disable,self.orderby)./build/lib.linux-i686-2.6/pyfisheyes/model/categories.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/multiline.py
 ##########################################
@@ -1255,6 +1100,7 @@ class Multiline:
 
     def display(self):
         return self.c.makeChart2(PNG)
+./build/lib.linux-i686-2.6/pyfisheyes/model/multiline.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/apperrorlog.py
@@ -1316,7 +1162,8 @@ mapper(Company, companies, properties={
 })
 
 
-"""
+"""./build/lib.linux-i686-2.6/pyfisheyes/model/apperrorlog.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/mysqlg1.py
 ##########################################
@@ -1347,6 +1194,7 @@ class Mysqlg1(Base):
         return "Mysqlg1('%s','%s','%s','%s','%s','%s')" % (self.id,self.datei,self.com_update,self.com_insert,self.com_delete,self.com_replace)
 
 
+./build/lib.linux-i686-2.6/pyfisheyes/model/mysqlg1.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/graphs.py
@@ -1410,7 +1258,8 @@ class Graphs(Base):
         opts = self.mediadata.split(',')
         for x,item in enumerate(opts):
             formatstr += "\t" + item
-        return formatstr
+        return formatstr./build/lib.linux-i686-2.6/pyfisheyes/model/graphs.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/simpleline.py
 ##########################################
@@ -1448,6 +1297,7 @@ class Simpleline:
 
     def display(self):
         return self.c.makeChart2(PNG)
+./build/lib.linux-i686-2.6/pyfisheyes/model/simpleline.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/meta.py
@@ -1468,6 +1318,7 @@ metadata = MetaData()
 
 # The declarative Base
 Base = declarative_base()
+./build/lib.linux-i686-2.6/pyfisheyes/model/meta.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/PieChartWithLegend.py
@@ -1511,10 +1362,12 @@ class PieChartWithLegend:
 
     def display(self):
         # output the chart       
-        return self.c.makeChart2(PNG)
+        return self.c.makeChart2(PNG)./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/PieChartWithLegend.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/__init__.py
 ##########################################
+./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/__init__.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/SimplePieChart.py
@@ -1542,7 +1395,8 @@ class SimplePieChart:
     
     def display(self):
         # output the chart       
-        return self.c.makeChart2(PNG)
+        return self.c.makeChart2(PNG)./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/SimplePieChart.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/StackedAreaChart.py
 ##########################################
@@ -1595,7 +1449,8 @@ class StackedAreaChart:
 
     def display(self):
         # output the chart       
-        return self.c.makeChart2(PNG)
+        return self.c.makeChart2(PNG)./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/StackedAreaChart.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/XZoneColoring.py
 ##########################################
@@ -1729,6 +1584,7 @@ class XZoneColoring:
         except:
             log.error("valuei excetion")
         return {'data':data, 'heldata':heldata, 'labels':labels, 'n':n}
+./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/XZoneColoring.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/MarksAndZones2.py
@@ -1897,6 +1753,7 @@ class MarksAndZones2:
         except:
             pass
         return {'data':data, 'labels':labels, 'n':n}
+./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/MarksAndZones2.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/OverlappingBarChart.py
@@ -1947,7 +1804,8 @@ class OverlappingBarChart:
 
     def display(self):
         # output the chart       
-        return self.c.makeChart2(PNG)
+        return self.c.makeChart2(PNG)./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/OverlappingBarChart.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/MultiLineChart.py
 ##########################################
@@ -2059,7 +1917,8 @@ class MultiLineChart:
         colors1 = [0x3366FF,0x6633FF,0xCC33FF,0xFF33CC,0x33CCFF,0x003DF5,0x002EB8,0xFF3366,0x33FFCC,0xB88A00,0xF5B800,0xFF6633]
         colors2 = [0x66CCFF,0xFF0000,0x00FF00,0x0000FF,0xCC00FF,0x6699FF,0x009999,0xCCCC00,0xFFCC33,0xFF9999,0x339900,0xCC0066]
         v = colors2[idx]
-        return v
+        return v./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/MultiLineChart.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/SimpleAreaChart.py
 ##########################################
@@ -2093,7 +1952,8 @@ class SimpleAreaChart:
 
     def display(self):
         # output the chart       
-        return self.c.makeChart2(PNG)
+        return self.c.makeChart2(PNG)./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/SimpleAreaChart.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/TDPieChart.py
 ##########################################
@@ -2129,7 +1989,8 @@ class TDPieChart:
 
     def display(self):
         # output the chart       
-        return self.c.makeChart2(PNG)
+        return self.c.makeChart2(PNG)./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/TDPieChart.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/SimpleBarChart.py
 ##########################################
@@ -2158,7 +2019,8 @@ class SimpleBarChart:
 
     def display(self):
         # output the chart       
-        return self.c.makeChart2(PNG)
+        return self.c.makeChart2(PNG)./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/SimpleBarChart.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/SimpleLineChart.py
 ##########################################
@@ -2246,6 +2108,7 @@ class SimpleLineChart:
         except:
             pass
         return {'data':data, 'labels':labels, 'n':n}
+./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/SimpleLineChart.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/BorderlessBarChart.py
@@ -2328,7 +2191,8 @@ class BorderlessBarChart:
 
     def display(self):
         # output the chart       
-        return self.c.makeChart2(PNG)
+        return self.c.makeChart2(PNG)./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/BorderlessBarChart.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/TDLineChart.py
 ##########################################
@@ -2371,7 +2235,8 @@ class TDLineChart:
         
     def display(self):
         # output the chart       
-        return self.c.makeChart2(PNG)
+        return self.c.makeChart2(PNG)./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/TDLineChart.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/PercentageAreaChart.py
 ##########################################
@@ -2448,7 +2313,8 @@ layer.setLegend(ReverseLegend)
 
 # output the chart
 print "Content-type: image/png\n"
-binaryPrint(c.makeChart2(PNG))
+binaryPrint(c.makeChart2(PNG))./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/PercentageAreaChart.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/CompactLineChart.py
 ##########################################
@@ -2515,7 +2381,8 @@ class CompactLineChart:
         
     def display(self):
         # output the chart        
-        return self.c.makeChart2(PNG)
+        return self.c.makeChart2(PNG)./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/CompactLineChart.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/TDAreaChart.py
 ##########################################
@@ -2558,7 +2425,8 @@ class TDAreaChart:
 
     def display(self):
         # output the chart       
-        return self.c.makeChart2(PNG)
+        return self.c.makeChart2(PNG)./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/TDAreaChart.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/DepthAreaChart.py
 ##########################################
@@ -2632,6 +2500,7 @@ class DepthAreaChart:
     def display(self):
         # output the chart       
         return self.c.makeChart2(PNG)
+./build/lib.linux-i686-2.6/pyfisheyes/model/chartobj/DepthAreaChart.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/tmc.py
@@ -2659,7 +2528,8 @@ class Tmc(Base):
         return "<Tmc('%s')" % self.datei
     
     def tostring(self):
-        return "Tmc('%s','%s','%s')" % (self.id,self.datei,self.t)
+        return "Tmc('%s','%s','%s')" % (self.id,self.datei,self.t)./build/lib.linux-i686-2.6/pyfisheyes/model/tmc.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/fisheyesdb/users.py
 ##########################################
@@ -2686,10 +2556,12 @@ class Users(Base):
     def __repr__(self):
         return "<Events('%s')" % self.username
     
-    
+    ./build/lib.linux-i686-2.6/pyfisheyes/model/fisheyesdb/users.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/fisheyesdb/__init__.py
 ##########################################
+./build/lib.linux-i686-2.6/pyfisheyes/model/fisheyesdb/__init__.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/fisheyesdb/dateitems.py
@@ -2731,6 +2603,7 @@ class Dateitems(Base):
     
     
 
+./build/lib.linux-i686-2.6/pyfisheyes/model/fisheyesdb/dateitems.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/fisheyesdb/categories.py
@@ -2810,7 +2683,8 @@ class Categories(Base):
     def search_highlight(self, sw):
         import pyfisheyes.lib.helpers as h
         p = re.compile(sw,re.IGNORECASE)
-        return h.literal(p.sub( '<span class="sword">'+sw+"</span>", self.typename))
+        return h.literal(p.sub( '<span class="sword">'+sw+"</span>", self.typename))./build/lib.linux-i686-2.6/pyfisheyes/model/fisheyesdb/categories.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/fisheyesdb/realtime.py
 ##########################################
@@ -2878,6 +2752,7 @@ class Realtime(Base):
         from pyfisheyes.model.utils import GlobalHandle as _gh
         gh = _gh.GlobalHandle()        
         return gh.numformat(self.valuei)
+./build/lib.linux-i686-2.6/pyfisheyes/model/fisheyesdb/realtime.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/fisheyesdb/contacts.py
@@ -2917,7 +2792,8 @@ class Contacts(Base):
     def __repr__(self):
         return "<Categories('%s')" % self.name
     
-    
+    ./build/lib.linux-i686-2.6/pyfisheyes/model/fisheyesdb/contacts.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/fisheyesdb/graphs.py
 ##########################################
@@ -2953,7 +2829,8 @@ class Graphs(Base):
     def exporttoexcel(self):
         from pyfisheyes.model.utils import GlobalHandle as _gh
         gh = _gh.GlobalHandle()   
-        return gh.exporttoexcel(self.mediadata)
+        return gh.exporttoexcel(self.mediadata)./build/lib.linux-i686-2.6/pyfisheyes/model/fisheyesdb/graphs.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/fisheyesdb/alarminfo.py
 ##########################################
@@ -3019,7 +2896,8 @@ class Alarminfo(Base):
         from pyfisheyes.model.utils import GlobalHandle as _gh
         gh = _gh.GlobalHandle()   
         return gh.urlencode( self.t_name.encode('utf-8'))
-    
+    ./build/lib.linux-i686-2.6/pyfisheyes/model/fisheyesdb/alarminfo.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/fisheyesdb/logstuff.py
 ##########################################
@@ -3063,6 +2941,7 @@ class Logstuff(Base):
     
     
 
+./build/lib.linux-i686-2.6/pyfisheyes/model/fisheyesdb/logstuff.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/fisheyesdb/graphshour.py
@@ -3113,7 +2992,8 @@ class GraphsHour(Base):
     def exporttoexcel(self):
         from pyfisheyes.model.utils import GlobalHandle as _gh
         gh = _gh.GlobalHandle()   
-        return gh.exporttoexcel(self.mediadata)
+        return gh.exporttoexcel(self.mediadata)./build/lib.linux-i686-2.6/pyfisheyes/model/fisheyesdb/graphshour.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/fisheyesdb/events.py
 ##########################################
@@ -3178,7 +3058,8 @@ class Events(Base):
             content = h.literal(textile.textile(self.evcontent))
         except:
             content = ""
-        return content
+        return content./build/lib.linux-i686-2.6/pyfisheyes/model/fisheyesdb/events.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/model/fisheyesdb/graphshost.py
 ##########################################
@@ -3228,7 +3109,8 @@ class GraphsHost(Base):
     def exporttoexcel(self):
         from pyfisheyes.model.utils import GlobalHandle as _gh
         gh = _gh.GlobalHandle()   
-        return gh.exporttoexcel(self.mediadata)
+        return gh.exporttoexcel(self.mediadata)./build/lib.linux-i686-2.6/pyfisheyes/model/fisheyesdb/graphshost.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/lib/base.py
 ##########################################
@@ -3257,6 +3139,7 @@ class BaseController(WSGIController):
             return WSGIController.__call__(self, environ, start_response)
         finally:
             Session.remove()
+./build/lib.linux-i686-2.6/pyfisheyes/lib/base.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/lib/archivefile.py
@@ -3297,10 +3180,12 @@ def extractall(archive, dstdir):
 
     else:
         # seems to be a single file, save it
-        shutil.copyfile(archive, os.path.join(dstdir, os.path.basename(archive)))
+        shutil.copyfile(archive, os.path.join(dstdir, os.path.basename(archive)))./build/lib.linux-i686-2.6/pyfisheyes/lib/archivefile.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/lib/__init__.py
 ##########################################
+./build/lib.linux-i686-2.6/pyfisheyes/lib/__init__.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/lib/app_globals.py
@@ -3328,6 +3213,7 @@ class Globals(object):
         self.cache = CacheManager(**parse_cache_config_options(config))
         atexit.register(tm_pylons.shutdown_extension)
         interface.start(tm_pylons.FakeConfigObj(config))
+./build/lib.linux-i686-2.6/pyfisheyes/lib/app_globals.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/lib/auth.py
@@ -3343,6 +3229,7 @@ has_delete_role = HasAuthKitRole(['delete'])
 
 def render_signin():
     return render('/derived/account/signin.html').encode('utf-8')
+./build/lib.linux-i686-2.6/pyfisheyes/lib/auth.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/lib/helpers.py
@@ -3409,6 +3296,7 @@ def remove_empty_dirs(root):
                 os.rmdir(os.path.join(dirpath, subdirname))
             except OSError:
                 pass
+./build/lib.linux-i686-2.6/pyfisheyes/lib/helpers.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/lib/imageprocessing.py
@@ -3522,6 +3410,7 @@ class ImageProcessing:
         ss = s.lower()
         return ss
 
+./build/lib.linux-i686-2.6/pyfisheyes/lib/imageprocessing.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/controllers/alert.py
@@ -3576,7 +3465,8 @@ class AlertController(BaseController):
         return render("/derived/alert/list.html")
     
     def view(self,id):
-        pass
+        pass./build/lib.linux-i686-2.6/pyfisheyes/controllers/alert.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/controllers/speed.py
 ##########################################
@@ -3597,10 +3487,12 @@ class SpeedController(BaseController):
         # or, return a string
         c.pagename = "speed"
         return render("/derived/speed/index.html")
+./build/lib.linux-i686-2.6/pyfisheyes/controllers/speed.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/controllers/__init__.py
 ##########################################
+./build/lib.linux-i686-2.6/pyfisheyes/controllers/__init__.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/controllers/security.py
@@ -3665,6 +3557,7 @@ class SecurityController(BaseController):
 
     def failed(self):
         return render('/auth_failed.mako')
+./build/lib.linux-i686-2.6/pyfisheyes/controllers/security.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/controllers/session.py
@@ -3694,6 +3587,7 @@ class SessionController(BaseController):
         session['name'] = 'tony'
         session.save()
         return "save session ok"
+./build/lib.linux-i686-2.6/pyfisheyes/controllers/session.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/controllers/example.py
@@ -3715,6 +3609,7 @@ class ExampleController(BaseController):
         # or, return a string
         #return 'Hello World'
         return render('/example.mako')
+./build/lib.linux-i686-2.6/pyfisheyes/controllers/example.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/controllers/categories.py
@@ -3906,6 +3801,7 @@ class CategoriesController(BaseController):
         model.meta.Session.delete(ca)
         model.meta.Session.commit()
         return render('/derived/categories/deleted.html')
+./build/lib.linux-i686-2.6/pyfisheyes/controllers/categories.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/controllers/daily_report.py
@@ -3962,6 +3858,7 @@ class DailyReportController(BaseController):
             #return dateitems.stuff
             #return render("/derived/list/daily_report.html")
         return render("/derived/list/daily_report.html")
+./build/lib.linux-i686-2.6/pyfisheyes/controllers/daily_report.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/controllers/apperrorlog.py
@@ -4008,7 +3905,8 @@ class ApperrorlogController(BaseController):
 
         rows = model.meta.Session.query(model.Apperrorlog).all()
 
-        return _m.Multiline(rows,names,titles).display()
+        return _m.Multiline(rows,names,titles).display()./build/lib.linux-i686-2.6/pyfisheyes/controllers/apperrorlog.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/controllers/list.py
 ##########################################
@@ -4149,6 +4047,7 @@ class ListController(BaseController):
         gh = _gh.GlobalHandle()
         c.currentdatetime = gh.getCurrentDateTime("%H:%M:%S")
         return render(template_name)
+./build/lib.linux-i686-2.6/pyfisheyes/controllers/list.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/controllers/account.py
@@ -4181,6 +4080,7 @@ class AccountController(BaseController):
     def signinagain(self):
         request.environ['paste.auth_tkt.logout_user']()
         return render('/derived/account/signin.html').replace('%s', h.url_for('signin'))
+./build/lib.linux-i686-2.6/pyfisheyes/controllers/account.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/controllers/mysqlg1.py
@@ -4226,6 +4126,7 @@ class Mysqlg1Controller(BaseController):
         rows = model.meta.Session.query(model.Mysqlg1).all()
 
         return _m.Multiline(rows,names,titles).display()
+./build/lib.linux-i686-2.6/pyfisheyes/controllers/mysqlg1.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/controllers/wsgiapp.py
@@ -4246,6 +4147,7 @@ class WsgiappController(BaseController):
         #return render('/wsgiapp.mako')
         # or, return a string
         return 'Hello World'
+./build/lib.linux-i686-2.6/pyfisheyes/controllers/wsgiapp.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/controllers/contacts.py
@@ -4334,6 +4236,7 @@ class ContactsController(BaseController):
         qw = ch.createContact()
         redirect('/contacts/list/1?qw='+qw)     
         return ''
+./build/lib.linux-i686-2.6/pyfisheyes/controllers/contacts.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/controllers/chart.py
@@ -4360,6 +4263,7 @@ class ChartController(BaseController):
         return _g.XZoneColoring().display()
 
    
+./build/lib.linux-i686-2.6/pyfisheyes/controllers/chart.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/controllers/cookie.py
@@ -4392,6 +4296,7 @@ class CookieController(BaseController):
         #response.set_cookie(self, key, value='', max_age=None, path='/', domain=None, secure=None,
         #         httponly=False, version=None, comment=None, expires=None, overwrite=False)
         return "write cookie ok"
+./build/lib.linux-i686-2.6/pyfisheyes/controllers/cookie.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/controllers/view.py
@@ -4777,6 +4682,7 @@ class ViewController(BaseController):
         return "success"
     def test(self):
         self.data(self,119,)
+./build/lib.linux-i686-2.6/pyfisheyes/controllers/view.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/controllers/form.py
@@ -4815,6 +4721,7 @@ class FormController(BaseController):
         myfile.file.close()
         local_file.close()
         return "hello, name: %s, upload: %s" % (name, myfile.filename)
+./build/lib.linux-i686-2.6/pyfisheyes/controllers/form.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/controllers/database.py
@@ -4847,6 +4754,7 @@ class DatabaseController(BaseController):
         model.meta.Session.add(msg)
         model.meta.Session.commit()
         return "add %s ok..." % content
+./build/lib.linux-i686-2.6/pyfisheyes/controllers/database.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/controllers/error.py
@@ -4914,6 +4822,7 @@ class ErrorController(BaseController):
         request = self._py_object.request
         request.environ['PATH_INFO'] = '/%s' % path
         return PkgResourcesParser('pylons', 'pylons')(request.environ, self.start_response)
+./build/lib.linux-i686-2.6/pyfisheyes/controllers/error.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/controllers/logstuffshow.py
@@ -4960,6 +4869,7 @@ class LogstuffshowController(BaseController):
         res = p.sub('<br />', typename + content)
 
         return res
+./build/lib.linux-i686-2.6/pyfisheyes/controllers/logstuffshow.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/controllers/tmc.py
@@ -5006,7 +4916,8 @@ class TmcController(BaseController):
 
         rows = model.meta.Session.query(model.Tmc).all()
 
-        return _m.Multiline(rows,names,titles).display()
+        return _m.Multiline(rows,names,titles).display()./build/lib.linux-i686-2.6/pyfisheyes/controllers/tmc.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/controllers/home.py
 ##########################################
@@ -5030,6 +4941,7 @@ class HomeController(BaseController):
         
         
         return render('/derived/homepage/home.html')
+./build/lib.linux-i686-2.6/pyfisheyes/controllers/home.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/controllers/events.py
@@ -5246,7 +5158,8 @@ class EventsController(BaseController):
             "dest_uri": dest_uri
         }
 
-    
+    ./build/lib.linux-i686-2.6/pyfisheyes/controllers/events.py
+
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/tests/__init__.py
 ##########################################
@@ -5296,10 +5209,12 @@ class TestController(TestCase):
         url._push_object(URLGenerator(config['routes.map'], environ))
         self.app = TestApp(wsgiapp)
         TestCase.__init__(self, *args, **kwargs)
+./build/lib.linux-i686-2.6/pyfisheyes/tests/__init__.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/tests/test_models.py
 ##########################################
+./build/lib.linux-i686-2.6/pyfisheyes/tests/test_models.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_apperrorlog.py
@@ -5311,10 +5226,12 @@ class TestApperrorlogController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='apperrorlog', action='index'))
         # Test response...
+./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_apperrorlog.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/__init__.py
 ##########################################
+./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/__init__.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_example.py
@@ -5326,6 +5243,7 @@ class TestExampleController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='example', action='index'))
         # Test response...
+./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_example.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_account.py
@@ -5337,6 +5255,7 @@ class TestAccountController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='account', action='index'))
         # Test response...
+./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_account.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_security.py
@@ -5348,6 +5267,7 @@ class TestSecurityController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='security', action='index'))
         # Test response...
+./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_security.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_events.py
@@ -5359,6 +5279,7 @@ class TestEventsController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='events', action='index'))
         # Test response...
+./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_events.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_categories.py
@@ -5370,6 +5291,7 @@ class TestCategoriesController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='categories', action='index'))
         # Test response...
+./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_categories.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_session.py
@@ -5381,6 +5303,7 @@ class TestSessionController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='session', action='index'))
         # Test response...
+./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_session.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_daily_report.py
@@ -5392,6 +5315,7 @@ class TestDailyReportController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='daily_report', action='index'))
         # Test response...
+./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_daily_report.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_view.py
@@ -5403,6 +5327,7 @@ class TestViewController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='view', action='index'))
         # Test response...
+./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_view.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_home.py
@@ -5414,6 +5339,7 @@ class TestHomeController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='home', action='index'))
         # Test response...
+./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_home.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_wsgiapp.py
@@ -5425,6 +5351,7 @@ class TestWsgiappController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='wsgiapp', action='index'))
         # Test response...
+./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_wsgiapp.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_tmc.py
@@ -5436,6 +5363,7 @@ class TestTmcController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='tmc', action='index'))
         # Test response...
+./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_tmc.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_logstuffshow.py
@@ -5447,6 +5375,7 @@ class TestLogstuffshowController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='logstuffshow', action='index'))
         # Test response...
+./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_logstuffshow.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_alert.py
@@ -5458,6 +5387,7 @@ class TestAlertController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='alert', action='index'))
         # Test response...
+./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_alert.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_speed.py
@@ -5469,6 +5399,7 @@ class TestSpeedController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='speed', action='index'))
         # Test response...
+./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_speed.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_chart.py
@@ -5480,6 +5411,7 @@ class TestChartController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='chart', action='index'))
         # Test response...
+./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_chart.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_database.py
@@ -5491,6 +5423,7 @@ class TestDatabaseController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='database', action='index'))
         # Test response...
+./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_database.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_contacts.py
@@ -5502,6 +5435,7 @@ class TestContactsController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='contacts', action='index'))
         # Test response...
+./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_contacts.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_cookie.py
@@ -5513,6 +5447,7 @@ class TestCookieController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='cookie', action='index'))
         # Test response...
+./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_cookie.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_mysqlg1.py
@@ -5524,6 +5459,7 @@ class TestMysqlg1Controller(TestController):
     def test_index(self):
         response = self.app.get(url(controller='mysqlg1', action='index'))
         # Test response...
+./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_mysqlg1.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_form.py
@@ -5535,6 +5471,7 @@ class TestFormController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='form', action='index'))
         # Test response...
+./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_form.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_list.py
@@ -5546,6 +5483,7 @@ class TestListController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='list', action='index'))
         # Test response...
+./build/lib.linux-i686-2.6/pyfisheyes/tests/functional/test_list.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/config/routing.py
@@ -5595,10 +5533,12 @@ def make_map(config):
     
 
     return map
+./build/lib.linux-i686-2.6/pyfisheyes/config/routing.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/config/__init__.py
 ##########################################
+./build/lib.linux-i686-2.6/pyfisheyes/config/__init__.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/config/middleware.py
@@ -5676,6 +5616,7 @@ def make_app(global_conf, full_stack=True, static_files=True, **app_conf):
         app = Cascade([static_app, app])
     app.config = config
     return app
+./build/lib.linux-i686-2.6/pyfisheyes/config/middleware.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/config/environment.py
@@ -5738,6 +5679,7 @@ def load_environment(global_conf, app_conf):
     # any Pylons config options)
     
     return config
+./build/lib.linux-i686-2.6/pyfisheyes/config/environment.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/jobs/alter_message.py
@@ -5930,6 +5872,7 @@ if __name__ == "__main__":
             lookup_system()
         if flags['action'] == 'mail':
             send_mail()
+./build/lib.linux-i686-2.6/pyfisheyes/jobs/alter_message.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/jobs/daily_report.py
@@ -6152,6 +6095,7 @@ if __name__ == "__main__":
             lookup_system()
         if flags['action'] == 'mail':
             send_mail()
+./build/lib.linux-i686-2.6/pyfisheyes/jobs/daily_report.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/jobs/graphs_job.py
@@ -6313,6 +6257,7 @@ if __name__ == "__main__":
             except:
                 print "Fail"
     
+./build/lib.linux-i686-2.6/pyfisheyes/jobs/graphs_job.py
 
 ##########################################
 ####file_name: ./build/lib.linux-i686-2.6/pyfisheyes/websetup.py
@@ -6332,6 +6277,7 @@ def setup_app(command, conf, vars):
 
     # Create the tables if they don't already exist
     Base.metadata.create_all(bind=Session.bind)
+./build/lib.linux-i686-2.6/pyfisheyes/websetup.py
 
 ##########################################
 ####file_name: ./jobs/tmc_jobs.py
@@ -6471,7 +6417,8 @@ if __name__ == "__main__":
                 print update(flags['classname'],flags['values'])
             except:
                 print "Fail"
-    
+    ./jobs/tmc_jobs.py
+
 ##########################################
 ####file_name: ./jobs/hello.py
 ##########################################
@@ -6509,6 +6456,7 @@ def hello2():
 if __name__== '__main__':
 
     hello2()
+./jobs/hello.py
 
 ##########################################
 ####file_name: ./jobs/daily_report_hyhe.py
@@ -6583,6 +6531,7 @@ if __name__== '__main__':
     else:
         if flags['date']:
             lookup_system(flags['date'])
+./jobs/daily_report_hyhe.py
 
 ##########################################
 ####file_name: ./jobs/alert_message.py
@@ -6806,6 +6755,7 @@ if __name__ == "__main__":
             lookup_system()
         if flags['action'] == 'mail':
             send_mail()
+./jobs/alert_message.py
 
 ##########################################
 ####file_name: ./jobs/daily_report.py
@@ -6873,6 +6823,7 @@ if __name__== '__main__':
 	lookup_system()
 
     
+./jobs/daily_report.py
 
 ##########################################
 ####file_name: ./jobs/graphs_job.py
@@ -7031,6 +6982,7 @@ if __name__ == "__main__":
             except:
                 print "Fail"
     
+./jobs/graphs_job.py
 
 ##########################################
 ####file_name: ./data/templates/base/index.html.py
@@ -7215,6 +7167,7 @@ def render_heading(context):
         context.caller_stack._pop_frame()
 
 
+./data/templates/base/index.html.py
 
 ##########################################
 ####file_name: ./data/templates/derived/view/onlydata.html.py
@@ -7346,6 +7299,7 @@ def render_body(context,**pageargs):
         context.caller_stack._pop_frame()
 
 
+./data/templates/derived/view/onlydata.html.py
 
 ##########################################
 ####file_name: ./data/templates/derived/view/view.html.py
@@ -7881,6 +7835,7 @@ def render_head_tags(context):
         context.caller_stack._pop_frame()
 
 
+./data/templates/derived/view/view.html.py
 
 ##########################################
 ####file_name: ./data/templates/derived/list/report_7days.html.py
@@ -8024,6 +7979,7 @@ def render_profile(context):
         context.caller_stack._pop_frame()
 
 
+./data/templates/derived/list/report_7days.html.py
 
 ##########################################
 ####file_name: ./data/templates/derived/list/list.html.py
@@ -8171,6 +8127,7 @@ def render_title(context):
         context.caller_stack._pop_frame()
 
 
+./data/templates/derived/list/list.html.py
 
 ##########################################
 ####file_name: ./data/templates/derived/list/realtime.html.py
@@ -8353,6 +8310,7 @@ def render_body(context,**pageargs):
         context.caller_stack._pop_frame()
 
 
+./data/templates/derived/list/realtime.html.py
 
 ##########################################
 ####file_name: ./data/templates/derived/list/daily_report.html.py
@@ -8518,6 +8476,7 @@ def render_body(context,**pageargs):
         context.caller_stack._pop_frame()
 
 
+./data/templates/derived/list/daily_report.html.py
 
 ##########################################
 ####file_name: ./data/templates/derived/list/report.html.py
@@ -8581,6 +8540,7 @@ def render_body(context,**pageargs):
         context.caller_stack._pop_frame()
 
 
+./data/templates/derived/list/report.html.py
 
 ##########################################
 ####file_name: ./data/templates/derived/events/detail.html.py
@@ -8854,6 +8814,7 @@ def render_head_tags(context):
         context.caller_stack._pop_frame()
 
 
+./data/templates/derived/events/detail.html.py
 
 ##########################################
 ####file_name: ./data/templates/derived/events/list.html.py
@@ -8954,6 +8915,7 @@ def render_heading(context):
         context.caller_stack._pop_frame()
 
 
+./data/templates/derived/events/list.html.py
 
 ##########################################
 ####file_name: ./data/templates/derived/events/new.html.py
@@ -9261,6 +9223,7 @@ def render_head_tags(context):
         context.caller_stack._pop_frame()
 
 
+./data/templates/derived/events/new.html.py
 
 ##########################################
 ####file_name: ./data/templates/derived/devices/list.html.py
@@ -9384,6 +9347,7 @@ def render_script(context):
         context.caller_stack._pop_frame()
 
 
+./data/templates/derived/devices/list.html.py
 
 ##########################################
 ####file_name: ./data/templates/derived/devices/daily_report.html.py
@@ -9611,6 +9575,7 @@ def render_profile(context):
         context.caller_stack._pop_frame()
 
 
+./data/templates/derived/devices/daily_report.html.py
 
 ##########################################
 ####file_name: ./data/templates/derived/speed/index.html.py
@@ -9694,6 +9659,7 @@ def render_title(context):
         context.caller_stack._pop_frame()
 
 
+./data/templates/derived/speed/index.html.py
 
 ##########################################
 ####file_name: ./data/templates/derived/account/signedin.html.py
@@ -9770,6 +9736,7 @@ def render_title(context):
         context.caller_stack._pop_frame()
 
 
+./data/templates/derived/account/signedin.html.py
 
 ##########################################
 ####file_name: ./data/templates/derived/account/signin.html.py
@@ -9844,6 +9811,7 @@ def render_title(context):
         context.caller_stack._pop_frame()
 
 
+./data/templates/derived/account/signin.html.py
 
 ##########################################
 ####file_name: ./data/templates/derived/categories/edit.html.py
@@ -10271,6 +10239,7 @@ def render_heading(context):
         context.caller_stack._pop_frame()
 
 
+./data/templates/derived/categories/edit.html.py
 
 ##########################################
 ####file_name: ./data/templates/derived/error/document.html.py
@@ -10362,6 +10331,7 @@ def render_title(context):
         context.caller_stack._pop_frame()
 
 
+./data/templates/derived/error/document.html.py
 
 ##########################################
 ####file_name: ./data/templates/derived/homepage/home.html.py
@@ -10430,6 +10400,7 @@ def render_title(context):
         context.caller_stack._pop_frame()
 
 
+./data/templates/derived/homepage/home.html.py
 
 ##########################################
 ####file_name: ./data/templates/component/pagination.html.py
@@ -10487,6 +10458,7 @@ def render_pagin(context,cp,is_ajax):
         context.caller_stack._pop_frame()
 
 
+./data/templates/component/pagination.html.py
 
 ##########################################
 ####file_name: ./data/templates/component/navigation.html.py
@@ -10637,6 +10609,7 @@ def render_menu(context,selected):
         context.caller_stack._pop_frame()
 
 
+./data/templates/component/navigation.html.py
 
 ##########################################
 ####file_name: ./data/templates/component/search.html.py
@@ -10713,6 +10686,7 @@ def render_bar(context,url,mode):
         context.caller_stack._pop_frame()
 
 
+./data/templates/component/search.html.py
 
 ##########################################
 ####file_name: ./ez_setup.py
@@ -10993,10 +10967,12 @@ if __name__=='__main__':
 
 
 
+./ez_setup.py
 
 ##########################################
 ####file_name: ./pyfisheyes/__init__.py
 ##########################################
+./pyfisheyes/__init__.py
 
 ##########################################
 ####file_name: ./pyfisheyes/model/__init__.py
@@ -11026,10 +11002,12 @@ from pyfisheyes.model.fisheyesdb.deviceitemgroup import DeviceItemGroup
 def init_model(engine):
     """Call me before using any of the tables or classes in the model"""
     Session.configure(bind=engine)
+./pyfisheyes/model/__init__.py
 
 ##########################################
 ####file_name: ./pyfisheyes/model/utils/__init__.py
 ##########################################
+./pyfisheyes/model/utils/__init__.py
 
 ##########################################
 ####file_name: ./pyfisheyes/model/utils/ContactHandle.py
@@ -11084,7 +11062,8 @@ class ContactHandle():
         return qw
     
             
-    
+    ./pyfisheyes/model/utils/ContactHandle.py
+
 ##########################################
 ####file_name: ./pyfisheyes/model/utils/EventHandle.py
 ##########################################
@@ -11265,7 +11244,8 @@ class EventHandle():
             events = model.meta.Session.query(model.Events).filter_by(evdate=ds).order_by(ev.id.desc())
         return events
     def isExistEvent(self,ds):
-        return  model.meta.Session.query(model.Events).filter_by(evdate=ds).count()
+        return  model.meta.Session.query(model.Events).filter_by(evdate=ds).count()./pyfisheyes/model/utils/EventHandle.py
+
 ##########################################
 ####file_name: ./pyfisheyes/model/utils/GlobalHandle.py
 ##########################################
@@ -11365,6 +11345,7 @@ class GlobalHandle():
         
         
         return html_content
+./pyfisheyes/model/utils/GlobalHandle.py
 
 ##########################################
 ####file_name: ./pyfisheyes/model/utils/ViewHandle.py
@@ -11698,6 +11679,7 @@ class ViewHandle():
         
         
           
+./pyfisheyes/model/utils/ViewHandle.py
 
 ##########################################
 ####file_name: ./pyfisheyes/model/utils/WebAPI.py
@@ -11910,7 +11892,8 @@ class WebAPI():
         if n > 0:
             return True
         else:
-            return False
+            return False./pyfisheyes/model/utils/WebAPI.py
+
 ##########################################
 ####file_name: ./pyfisheyes/model/utils/DailyReportHandle.py
 ##########################################
@@ -12025,6 +12008,7 @@ class DailyReportHandle():
         )
         return rows
     
+./pyfisheyes/model/utils/DailyReportHandle.py
 
 ##########################################
 ####file_name: ./pyfisheyes/model/utils/DeviceHandle.py
@@ -12045,7 +12029,8 @@ class DeviceHandle():
             devices = model.meta.Session.query(dv).filter_by(hostname=ds).order_by(dv.id.desc())
         else:
             devices = model.meta.Session.query(dv).order_by(dv.id.desc())
-        return devices 
+        return devices ./pyfisheyes/model/utils/DeviceHandle.py
+
 ##########################################
 ####file_name: ./pyfisheyes/model/meta.py
 ##########################################
@@ -12065,6 +12050,7 @@ metadata = MetaData()
 
 # The declarative Base
 Base = declarative_base()
+./pyfisheyes/model/meta.py
 
 ##########################################
 ####file_name: ./pyfisheyes/model/chartobj/PieChartWithLegend.py
@@ -12108,10 +12094,12 @@ class PieChartWithLegend:
 
     def display(self):
         # output the chart       
-        return self.c.makeChart2(PNG)
+        return self.c.makeChart2(PNG)./pyfisheyes/model/chartobj/PieChartWithLegend.py
+
 ##########################################
 ####file_name: ./pyfisheyes/model/chartobj/__init__.py
 ##########################################
+./pyfisheyes/model/chartobj/__init__.py
 
 ##########################################
 ####file_name: ./pyfisheyes/model/chartobj/SimplePieChart.py
@@ -12139,7 +12127,8 @@ class SimplePieChart:
     
     def display(self):
         # output the chart       
-        return self.c.makeChart2(PNG)
+        return self.c.makeChart2(PNG)./pyfisheyes/model/chartobj/SimplePieChart.py
+
 ##########################################
 ####file_name: ./pyfisheyes/model/chartobj/StackedAreaChart.py
 ##########################################
@@ -12192,7 +12181,8 @@ class StackedAreaChart:
 
     def display(self):
         # output the chart       
-        return self.c.makeChart2(PNG)
+        return self.c.makeChart2(PNG)./pyfisheyes/model/chartobj/StackedAreaChart.py
+
 ##########################################
 ####file_name: ./pyfisheyes/model/chartobj/XZoneColoring.py
 ##########################################
@@ -12327,6 +12317,7 @@ class XZoneColoring:
             log.error("valuei excetion")
         return {'data':data, 'heldata':heldata, 'labels':labels, 'n':n}
     
+./pyfisheyes/model/chartobj/XZoneColoring.py
 
 ##########################################
 ####file_name: ./pyfisheyes/model/chartobj/MarksAndZones2.py
@@ -12495,6 +12486,7 @@ class MarksAndZones2:
         except:
             pass
         return {'data':data, 'labels':labels, 'n':n}
+./pyfisheyes/model/chartobj/MarksAndZones2.py
 
 ##########################################
 ####file_name: ./pyfisheyes/model/chartobj/OverlappingBarChart.py
@@ -12545,7 +12537,8 @@ class OverlappingBarChart:
 
     def display(self):
         # output the chart       
-        return self.c.makeChart2(PNG)
+        return self.c.makeChart2(PNG)./pyfisheyes/model/chartobj/OverlappingBarChart.py
+
 ##########################################
 ####file_name: ./pyfisheyes/model/chartobj/MultiLineChart.py
 ##########################################
@@ -12657,7 +12650,8 @@ class MultiLineChart:
         colors1 = [0x3366FF,0x6633FF,0xCC33FF,0xFF33CC,0x33CCFF,0x003DF5,0x002EB8,0xFF3366,0x33FFCC,0xB88A00,0xF5B800,0xFF6633]
         colors2 = [0x66CCFF,0xFF0000,0x00FF00,0x0000FF,0xCC00FF,0x6699FF,0x009999,0xCCCC00,0xFFCC33,0xFF9999,0x339900,0xCC0066]
         v = colors2[idx]
-        return v
+        return v./pyfisheyes/model/chartobj/MultiLineChart.py
+
 ##########################################
 ####file_name: ./pyfisheyes/model/chartobj/SimpleAreaChart.py
 ##########################################
@@ -12691,7 +12685,8 @@ class SimpleAreaChart:
 
     def display(self):
         # output the chart       
-        return self.c.makeChart2(PNG)
+        return self.c.makeChart2(PNG)./pyfisheyes/model/chartobj/SimpleAreaChart.py
+
 ##########################################
 ####file_name: ./pyfisheyes/model/chartobj/TDPieChart.py
 ##########################################
@@ -12727,7 +12722,8 @@ class TDPieChart:
 
     def display(self):
         # output the chart       
-        return self.c.makeChart2(PNG)
+        return self.c.makeChart2(PNG)./pyfisheyes/model/chartobj/TDPieChart.py
+
 ##########################################
 ####file_name: ./pyfisheyes/model/chartobj/SimpleBarChart.py
 ##########################################
@@ -12756,7 +12752,8 @@ class SimpleBarChart:
 
     def display(self):
         # output the chart       
-        return self.c.makeChart2(PNG)
+        return self.c.makeChart2(PNG)./pyfisheyes/model/chartobj/SimpleBarChart.py
+
 ##########################################
 ####file_name: ./pyfisheyes/model/chartobj/SimpleLineChart.py
 ##########################################
@@ -12849,6 +12846,7 @@ class SimpleLineChart:
         except:
             pass
         return {'data':data, 'labels':labels, 'n':n}
+./pyfisheyes/model/chartobj/SimpleLineChart.py
 
 ##########################################
 ####file_name: ./pyfisheyes/model/chartobj/BorderlessBarChart.py
@@ -12931,7 +12929,8 @@ class BorderlessBarChart:
 
     def display(self):
         # output the chart       
-        return self.c.makeChart2(PNG)
+        return self.c.makeChart2(PNG)./pyfisheyes/model/chartobj/BorderlessBarChart.py
+
 ##########################################
 ####file_name: ./pyfisheyes/model/chartobj/TDLineChart.py
 ##########################################
@@ -12974,7 +12973,8 @@ class TDLineChart:
         
     def display(self):
         # output the chart       
-        return self.c.makeChart2(PNG)
+        return self.c.makeChart2(PNG)./pyfisheyes/model/chartobj/TDLineChart.py
+
 ##########################################
 ####file_name: ./pyfisheyes/model/chartobj/PercentageAreaChart.py
 ##########################################
@@ -13051,7 +13051,8 @@ layer.setLegend(ReverseLegend)
 
 # output the chart
 print "Content-type: image/png\n"
-binaryPrint(c.makeChart2(PNG))
+binaryPrint(c.makeChart2(PNG))./pyfisheyes/model/chartobj/PercentageAreaChart.py
+
 ##########################################
 ####file_name: ./pyfisheyes/model/chartobj/CompactLineChart.py
 ##########################################
@@ -13118,7 +13119,8 @@ class CompactLineChart:
         
     def display(self):
         # output the chart        
-        return self.c.makeChart2(PNG)
+        return self.c.makeChart2(PNG)./pyfisheyes/model/chartobj/CompactLineChart.py
+
 ##########################################
 ####file_name: ./pyfisheyes/model/chartobj/TDAreaChart.py
 ##########################################
@@ -13161,7 +13163,8 @@ class TDAreaChart:
 
     def display(self):
         # output the chart       
-        return self.c.makeChart2(PNG)
+        return self.c.makeChart2(PNG)./pyfisheyes/model/chartobj/TDAreaChart.py
+
 ##########################################
 ####file_name: ./pyfisheyes/model/chartobj/DepthAreaChart.py
 ##########################################
@@ -13235,6 +13238,7 @@ class DepthAreaChart:
     def display(self):
         # output the chart       
         return self.c.makeChart2(PNG)
+./pyfisheyes/model/chartobj/DepthAreaChart.py
 
 ##########################################
 ####file_name: ./pyfisheyes/model/fisheyesdb/users.py
@@ -13262,10 +13266,12 @@ class Users(Base):
     def __repr__(self):
         return "<Events('%s')" % self.username
     
-    
+    ./pyfisheyes/model/fisheyesdb/users.py
+
 ##########################################
 ####file_name: ./pyfisheyes/model/fisheyesdb/__init__.py
 ##########################################
+./pyfisheyes/model/fisheyesdb/__init__.py
 
 ##########################################
 ####file_name: ./pyfisheyes/model/fisheyesdb/deviceitemsets.py
@@ -13303,6 +13309,7 @@ class DeviceItemSets(Base):
         self.short_scale = 0
         self.chart_id = 0
         self.group_id = 0
+./pyfisheyes/model/fisheyesdb/deviceitemsets.py
 
 ##########################################
 ####file_name: ./pyfisheyes/model/fisheyesdb/dateitems.py
@@ -13344,6 +13351,7 @@ class Dateitems(Base):
     
     
 
+./pyfisheyes/model/fisheyesdb/dateitems.py
 
 ##########################################
 ####file_name: ./pyfisheyes/model/fisheyesdb/categories.py
@@ -13423,7 +13431,8 @@ class Categories(Base):
     def search_highlight(self, sw):
         import pyfisheyes.lib.helpers as h
         p = re.compile(sw,re.IGNORECASE)
-        return h.literal(p.sub( '<span class="sword">'+sw+"</span>", self.typename))
+        return h.literal(p.sub( '<span class="sword">'+sw+"</span>", self.typename))./pyfisheyes/model/fisheyesdb/categories.py
+
 ##########################################
 ####file_name: ./pyfisheyes/model/fisheyesdb/chartstyle.py
 ##########################################
@@ -13445,7 +13454,8 @@ class ChartStyle(Base):
         self.permin = 'bit per min'
         self.style = 0
         self.layer = 1 
-        self.layercolor = 0x3056B830
+        self.layercolor = 0x3056B830./pyfisheyes/model/fisheyesdb/chartstyle.py
+
 ##########################################
 ####file_name: ./pyfisheyes/model/fisheyesdb/devicebase.py
 ##########################################
@@ -13493,6 +13503,7 @@ class DeviceBase(Base):
         self.customer = ''
         self.in_service = 0
         self.notes = ''
+./pyfisheyes/model/fisheyesdb/devicebase.py
 
 ##########################################
 ####file_name: ./pyfisheyes/model/fisheyesdb/deviceitemgroup.py
@@ -13524,6 +13535,7 @@ class DeviceItemGroup(Base):
         self.title3 = ""
         self.short_scale = 0
         self.chart_id = 0
+./pyfisheyes/model/fisheyesdb/deviceitemgroup.py
 
 ##########################################
 ####file_name: ./pyfisheyes/model/fisheyesdb/realtime.py
@@ -13592,6 +13604,7 @@ class Realtime(Base):
         from pyfisheyes.model.utils import GlobalHandle as _gh
         gh = _gh.GlobalHandle()        
         return gh.numformat(self.valuei)
+./pyfisheyes/model/fisheyesdb/realtime.py
 
 ##########################################
 ####file_name: ./pyfisheyes/model/fisheyesdb/devices.py
@@ -13614,7 +13627,8 @@ class Devices(Base):
         self.id = 0
         self.dname = ''
         self.ditem = ''
-        self.dsn = ''       
+        self.dsn = ''       ./pyfisheyes/model/fisheyesdb/devices.py
+
 ##########################################
 ####file_name: ./pyfisheyes/model/fisheyesdb/contacts.py
 ##########################################
@@ -13653,7 +13667,8 @@ class Contacts(Base):
     def __repr__(self):
         return "<Categories('%s')" % self.name
     
-    
+    ./pyfisheyes/model/fisheyesdb/contacts.py
+
 ##########################################
 ####file_name: ./pyfisheyes/model/fisheyesdb/messages.py
 ##########################################
@@ -13677,7 +13692,8 @@ class Messages(Base):
         self.eid = 0
         self.msgdate = '0000-00-00 00:00:00'       
         self.msgsubject = ''
-        self.msgcontent = ''
+        self.msgcontent = ''./pyfisheyes/model/fisheyesdb/messages.py
+
 ##########################################
 ####file_name: ./pyfisheyes/model/fisheyesdb/graphs.py
 ##########################################
@@ -13713,7 +13729,8 @@ class Graphs(Base):
     def exporttoexcel(self):
         from pyfisheyes.model.utils import GlobalHandle as _gh
         gh = _gh.GlobalHandle()   
-        return gh.exporttoexcel(self.mediadata)
+        return gh.exporttoexcel(self.mediadata)./pyfisheyes/model/fisheyesdb/graphs.py
+
 ##########################################
 ####file_name: ./pyfisheyes/model/fisheyesdb/alarminfo.py
 ##########################################
@@ -13779,7 +13796,8 @@ class Alarminfo(Base):
         from pyfisheyes.model.utils import GlobalHandle as _gh
         gh = _gh.GlobalHandle()   
         return gh.urlencode( self.t_name.encode('utf-8'))
-    
+    ./pyfisheyes/model/fisheyesdb/alarminfo.py
+
 ##########################################
 ####file_name: ./pyfisheyes/model/fisheyesdb/logstuff.py
 ##########################################
@@ -13823,6 +13841,7 @@ class Logstuff(Base):
     
     
 
+./pyfisheyes/model/fisheyesdb/logstuff.py
 
 ##########################################
 ####file_name: ./pyfisheyes/model/fisheyesdb/graphshour.py
@@ -13873,7 +13892,8 @@ class GraphsHour(Base):
     def exporttoexcel(self):
         from pyfisheyes.model.utils import GlobalHandle as _gh
         gh = _gh.GlobalHandle()   
-        return gh.exporttoexcel(self.mediadata)
+        return gh.exporttoexcel(self.mediadata)./pyfisheyes/model/fisheyesdb/graphshour.py
+
 ##########################################
 ####file_name: ./pyfisheyes/model/fisheyesdb/img_event.py
 ##########################################
@@ -13903,7 +13923,8 @@ class ImgEvent(Base):
         
         self.imgid = imgid       
         self.eid = eid
-        self.e_i_date = e_i_date
+        self.e_i_date = e_i_date./pyfisheyes/model/fisheyesdb/img_event.py
+
 ##########################################
 ####file_name: ./pyfisheyes/model/fisheyesdb/events.py
 ##########################################
@@ -13974,7 +13995,8 @@ class Events(Base):
             content = h.literal(textile.textile(self.evcontent))
         except:
             content = ""
-        return content
+        return content./pyfisheyes/model/fisheyesdb/events.py
+
 ##########################################
 ####file_name: ./pyfisheyes/model/fisheyesdb/graphshost.py
 ##########################################
@@ -14024,7 +14046,8 @@ class GraphsHost(Base):
     def exporttoexcel(self):
         from pyfisheyes.model.utils import GlobalHandle as _gh
         gh = _gh.GlobalHandle()   
-        return gh.exporttoexcel(self.mediadata)
+        return gh.exporttoexcel(self.mediadata)./pyfisheyes/model/fisheyesdb/graphshost.py
+
 ##########################################
 ####file_name: ./pyfisheyes/lib/base.py
 ##########################################
@@ -14053,6 +14076,7 @@ class BaseController(WSGIController):
             return WSGIController.__call__(self, environ, start_response)
         finally:
             Session.remove()
+./pyfisheyes/lib/base.py
 
 ##########################################
 ####file_name: ./pyfisheyes/lib/archivefile.py
@@ -14093,10 +14117,12 @@ def extractall(archive, dstdir):
 
     else:
         # seems to be a single file, save it
-        shutil.copyfile(archive, os.path.join(dstdir, os.path.basename(archive)))
+        shutil.copyfile(archive, os.path.join(dstdir, os.path.basename(archive)))./pyfisheyes/lib/archivefile.py
+
 ##########################################
 ####file_name: ./pyfisheyes/lib/__init__.py
 ##########################################
+./pyfisheyes/lib/__init__.py
 
 ##########################################
 ####file_name: ./pyfisheyes/lib/app_globals.py
@@ -14124,6 +14150,7 @@ class Globals(object):
         self.cache = CacheManager(**parse_cache_config_options(config))
         atexit.register(tm_pylons.shutdown_extension)
         interface.start(tm_pylons.FakeConfigObj(config))
+./pyfisheyes/lib/app_globals.py
 
 ##########################################
 ####file_name: ./pyfisheyes/lib/auth.py
@@ -14139,6 +14166,7 @@ has_delete_role = HasAuthKitRole(['delete'])
 
 def render_signin():
     return render('/derived/account/signin.html').encode('utf-8')
+./pyfisheyes/lib/auth.py
 
 ##########################################
 ####file_name: ./pyfisheyes/lib/helpers.py
@@ -14205,6 +14233,7 @@ def remove_empty_dirs(root):
                 os.rmdir(os.path.join(dirpath, subdirname))
             except OSError:
                 pass
+./pyfisheyes/lib/helpers.py
 
 ##########################################
 ####file_name: ./pyfisheyes/lib/imageprocessing.py
@@ -14318,6 +14347,7 @@ class ImageProcessing:
         ss = s.lower()
         return ss
 
+./pyfisheyes/lib/imageprocessing.py
 
 ##########################################
 ####file_name: ./pyfisheyes/controllers/alert.py
@@ -14372,7 +14402,8 @@ class AlertController(BaseController):
         return render("/derived/alert/list.html")
     
     def view(self,id):
-        pass
+        pass./pyfisheyes/controllers/alert.py
+
 ##########################################
 ####file_name: ./pyfisheyes/controllers/speed.py
 ##########################################
@@ -14393,10 +14424,12 @@ class SpeedController(BaseController):
         # or, return a string
         c.pagename = "speed"
         return render("/derived/speed/index.html")
+./pyfisheyes/controllers/speed.py
 
 ##########################################
 ####file_name: ./pyfisheyes/controllers/__init__.py
 ##########################################
+./pyfisheyes/controllers/__init__.py
 
 ##########################################
 ####file_name: ./pyfisheyes/controllers/security.py
@@ -14461,6 +14494,7 @@ class SecurityController(BaseController):
 
     def failed(self):
         return render('/auth_failed.mako')
+./pyfisheyes/controllers/security.py
 
 ##########################################
 ####file_name: ./pyfisheyes/controllers/session.py
@@ -14490,6 +14524,7 @@ class SessionController(BaseController):
         session['name'] = 'tony'
         session.save()
         return "save session ok"
+./pyfisheyes/controllers/session.py
 
 ##########################################
 ####file_name: ./pyfisheyes/controllers/example.py
@@ -14511,6 +14546,7 @@ class ExampleController(BaseController):
         # or, return a string
         #return 'Hello World'
         return render('/example.mako')
+./pyfisheyes/controllers/example.py
 
 ##########################################
 ####file_name: ./pyfisheyes/controllers/add.py
@@ -14619,7 +14655,8 @@ class AddController(BaseController):
     
             
             
-            
+            ./pyfisheyes/controllers/add.py
+
 ##########################################
 ####file_name: ./pyfisheyes/controllers/categories.py
 ##########################################
@@ -14810,6 +14847,7 @@ class CategoriesController(BaseController):
         model.meta.Session.delete(ca)
         model.meta.Session.commit()
         return render('/derived/categories/deleted.html')
+./pyfisheyes/controllers/categories.py
 
 ##########################################
 ####file_name: ./pyfisheyes/controllers/daily_report.py
@@ -14883,6 +14921,7 @@ class DailyReportController(BaseController):
             #return dateitems.stuff
             #return render("/derived/list/daily_report.html")
         return render("/derived/list/daily_report.html")
+./pyfisheyes/controllers/daily_report.py
 
 ##########################################
 ####file_name: ./pyfisheyes/controllers/apperrorlog.py
@@ -14929,7 +14968,8 @@ class ApperrorlogController(BaseController):
 
         rows = model.meta.Session.query(model.Apperrorlog).all()
 
-        return _m.Multiline(rows,names,titles).display()
+        return _m.Multiline(rows,names,titles).display()./pyfisheyes/controllers/apperrorlog.py
+
 ##########################################
 ####file_name: ./pyfisheyes/controllers/list.py
 ##########################################
@@ -15073,6 +15113,7 @@ class ListController(BaseController):
         gh = _gh.GlobalHandle()
         c.currentdatetime = gh.getCurrentDateTime("%H:%M:%S")
         return render(template_name)
+./pyfisheyes/controllers/list.py
 
 ##########################################
 ####file_name: ./pyfisheyes/controllers/devices.py
@@ -15421,6 +15462,7 @@ class DevicesController(BaseController):
         c_str = c_str.replace("Intel(R) Core(TM) i3 CPU","")  
         c_str = c_str.strip()
         return c_str + " x " + str(n)
+./pyfisheyes/controllers/devices.py
 
 ##########################################
 ####file_name: ./pyfisheyes/controllers/account.py
@@ -15453,6 +15495,7 @@ class AccountController(BaseController):
     def signinagain(self):
         request.environ['paste.auth_tkt.logout_user']()
         return render('/derived/account/signin.html').replace('%s', h.url_for('signin'))
+./pyfisheyes/controllers/account.py
 
 ##########################################
 ####file_name: ./pyfisheyes/controllers/mysqlg1.py
@@ -15498,6 +15541,7 @@ class Mysqlg1Controller(BaseController):
         rows = model.meta.Session.query(model.Mysqlg1).all()
 
         return _m.Multiline(rows,names,titles).display()
+./pyfisheyes/controllers/mysqlg1.py
 
 ##########################################
 ####file_name: ./pyfisheyes/controllers/wsgiapp.py
@@ -15518,6 +15562,7 @@ class WsgiappController(BaseController):
         #return render('/wsgiapp.mako')
         # or, return a string
         return 'Hello World'
+./pyfisheyes/controllers/wsgiapp.py
 
 ##########################################
 ####file_name: ./pyfisheyes/controllers/contacts.py
@@ -15606,6 +15651,7 @@ class ContactsController(BaseController):
         qw = ch.createContact()
         redirect('/contacts/list/1?qw='+qw)     
         return ''
+./pyfisheyes/controllers/contacts.py
 
 ##########################################
 ####file_name: ./pyfisheyes/controllers/chart.py
@@ -15632,6 +15678,7 @@ class ChartController(BaseController):
         return _g.XZoneColoring().display()
 
    
+./pyfisheyes/controllers/chart.py
 
 ##########################################
 ####file_name: ./pyfisheyes/controllers/cookie.py
@@ -15664,6 +15711,7 @@ class CookieController(BaseController):
         #response.set_cookie(self, key, value='', max_age=None, path='/', domain=None, secure=None,
         #         httponly=False, version=None, comment=None, expires=None, overwrite=False)
         return "write cookie ok"
+./pyfisheyes/controllers/cookie.py
 
 ##########################################
 ####file_name: ./pyfisheyes/controllers/view.py
@@ -16064,6 +16112,7 @@ class ViewController(BaseController):
         #redirect('/view/data/' + id)    
         return "success"
 
+./pyfisheyes/controllers/view.py
 
 ##########################################
 ####file_name: ./pyfisheyes/controllers/form.py
@@ -16102,6 +16151,7 @@ class FormController(BaseController):
         myfile.file.close()
         local_file.close()
         return "hello, name: %s, upload: %s" % (name, myfile.filename)
+./pyfisheyes/controllers/form.py
 
 ##########################################
 ####file_name: ./pyfisheyes/controllers/database.py
@@ -16134,6 +16184,7 @@ class DatabaseController(BaseController):
         model.meta.Session.add(msg)
         model.meta.Session.commit()
         return "add %s ok..." % content
+./pyfisheyes/controllers/database.py
 
 ##########################################
 ####file_name: ./pyfisheyes/controllers/error.py
@@ -16201,6 +16252,7 @@ class ErrorController(BaseController):
         request = self._py_object.request
         request.environ['PATH_INFO'] = '/%s' % path
         return PkgResourcesParser('pylons', 'pylons')(request.environ, self.start_response)
+./pyfisheyes/controllers/error.py
 
 ##########################################
 ####file_name: ./pyfisheyes/controllers/logstuffshow.py
@@ -16247,6 +16299,7 @@ class LogstuffshowController(BaseController):
         res = p.sub('<br />', typename + content)
 
         return res
+./pyfisheyes/controllers/logstuffshow.py
 
 ##########################################
 ####file_name: ./pyfisheyes/controllers/tmc.py
@@ -16293,7 +16346,8 @@ class TmcController(BaseController):
 
         rows = model.meta.Session.query(model.Tmc).all()
 
-        return _m.Multiline(rows,names,titles).display()
+        return _m.Multiline(rows,names,titles).display()./pyfisheyes/controllers/tmc.py
+
 ##########################################
 ####file_name: ./pyfisheyes/controllers/home.py
 ##########################################
@@ -16317,6 +16371,7 @@ class HomeController(BaseController):
         
         
         return render('/derived/homepage/home.html')
+./pyfisheyes/controllers/home.py
 
 ##########################################
 ####file_name: ./pyfisheyes/controllers/events.py
@@ -16585,7 +16640,8 @@ class EventsController(BaseController):
             "dest_uri": dest_uri
         }
 
-    
+    ./pyfisheyes/controllers/events.py
+
 ##########################################
 ####file_name: ./pyfisheyes/tests/__init__.py
 ##########################################
@@ -16635,10 +16691,12 @@ class TestController(TestCase):
         url._push_object(URLGenerator(config['routes.map'], environ))
         self.app = TestApp(wsgiapp)
         TestCase.__init__(self, *args, **kwargs)
+./pyfisheyes/tests/__init__.py
 
 ##########################################
 ####file_name: ./pyfisheyes/tests/test_models.py
 ##########################################
+./pyfisheyes/tests/test_models.py
 
 ##########################################
 ####file_name: ./pyfisheyes/tests/functional/test_apperrorlog.py
@@ -16650,6 +16708,7 @@ class TestApperrorlogController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='apperrorlog', action='index'))
         # Test response...
+./pyfisheyes/tests/functional/test_apperrorlog.py
 
 ##########################################
 ####file_name: ./pyfisheyes/tests/functional/test_devices.py
@@ -16661,10 +16720,12 @@ class TestDevicesController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='devices', action='index'))
         # Test response...
+./pyfisheyes/tests/functional/test_devices.py
 
 ##########################################
 ####file_name: ./pyfisheyes/tests/functional/__init__.py
 ##########################################
+./pyfisheyes/tests/functional/__init__.py
 
 ##########################################
 ####file_name: ./pyfisheyes/tests/functional/test_example.py
@@ -16676,6 +16737,7 @@ class TestExampleController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='example', action='index'))
         # Test response...
+./pyfisheyes/tests/functional/test_example.py
 
 ##########################################
 ####file_name: ./pyfisheyes/tests/functional/test_account.py
@@ -16687,6 +16749,7 @@ class TestAccountController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='account', action='index'))
         # Test response...
+./pyfisheyes/tests/functional/test_account.py
 
 ##########################################
 ####file_name: ./pyfisheyes/tests/functional/test_security.py
@@ -16698,6 +16761,7 @@ class TestSecurityController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='security', action='index'))
         # Test response...
+./pyfisheyes/tests/functional/test_security.py
 
 ##########################################
 ####file_name: ./pyfisheyes/tests/functional/test_events.py
@@ -16709,6 +16773,7 @@ class TestEventsController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='events', action='index'))
         # Test response...
+./pyfisheyes/tests/functional/test_events.py
 
 ##########################################
 ####file_name: ./pyfisheyes/tests/functional/test_categories.py
@@ -16720,6 +16785,7 @@ class TestCategoriesController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='categories', action='index'))
         # Test response...
+./pyfisheyes/tests/functional/test_categories.py
 
 ##########################################
 ####file_name: ./pyfisheyes/tests/functional/test_session.py
@@ -16731,6 +16797,7 @@ class TestSessionController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='session', action='index'))
         # Test response...
+./pyfisheyes/tests/functional/test_session.py
 
 ##########################################
 ####file_name: ./pyfisheyes/tests/functional/test_daily_report.py
@@ -16742,6 +16809,7 @@ class TestDailyReportController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='daily_report', action='index'))
         # Test response...
+./pyfisheyes/tests/functional/test_daily_report.py
 
 ##########################################
 ####file_name: ./pyfisheyes/tests/functional/test_view.py
@@ -16753,6 +16821,7 @@ class TestViewController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='view', action='index'))
         # Test response...
+./pyfisheyes/tests/functional/test_view.py
 
 ##########################################
 ####file_name: ./pyfisheyes/tests/functional/test_home.py
@@ -16764,6 +16833,7 @@ class TestHomeController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='home', action='index'))
         # Test response...
+./pyfisheyes/tests/functional/test_home.py
 
 ##########################################
 ####file_name: ./pyfisheyes/tests/functional/test_wsgiapp.py
@@ -16775,6 +16845,7 @@ class TestWsgiappController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='wsgiapp', action='index'))
         # Test response...
+./pyfisheyes/tests/functional/test_wsgiapp.py
 
 ##########################################
 ####file_name: ./pyfisheyes/tests/functional/test_tmc.py
@@ -16786,6 +16857,7 @@ class TestTmcController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='tmc', action='index'))
         # Test response...
+./pyfisheyes/tests/functional/test_tmc.py
 
 ##########################################
 ####file_name: ./pyfisheyes/tests/functional/test_logstuffshow.py
@@ -16797,6 +16869,7 @@ class TestLogstuffshowController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='logstuffshow', action='index'))
         # Test response...
+./pyfisheyes/tests/functional/test_logstuffshow.py
 
 ##########################################
 ####file_name: ./pyfisheyes/tests/functional/test_alert.py
@@ -16808,6 +16881,7 @@ class TestAlertController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='alert', action='index'))
         # Test response...
+./pyfisheyes/tests/functional/test_alert.py
 
 ##########################################
 ####file_name: ./pyfisheyes/tests/functional/test_speed.py
@@ -16819,6 +16893,7 @@ class TestSpeedController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='speed', action='index'))
         # Test response...
+./pyfisheyes/tests/functional/test_speed.py
 
 ##########################################
 ####file_name: ./pyfisheyes/tests/functional/test_chart.py
@@ -16830,6 +16905,7 @@ class TestChartController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='chart', action='index'))
         # Test response...
+./pyfisheyes/tests/functional/test_chart.py
 
 ##########################################
 ####file_name: ./pyfisheyes/tests/functional/test_database.py
@@ -16841,6 +16917,7 @@ class TestDatabaseController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='database', action='index'))
         # Test response...
+./pyfisheyes/tests/functional/test_database.py
 
 ##########################################
 ####file_name: ./pyfisheyes/tests/functional/test_contacts.py
@@ -16852,6 +16929,7 @@ class TestContactsController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='contacts', action='index'))
         # Test response...
+./pyfisheyes/tests/functional/test_contacts.py
 
 ##########################################
 ####file_name: ./pyfisheyes/tests/functional/test_cookie.py
@@ -16863,6 +16941,7 @@ class TestCookieController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='cookie', action='index'))
         # Test response...
+./pyfisheyes/tests/functional/test_cookie.py
 
 ##########################################
 ####file_name: ./pyfisheyes/tests/functional/test_mysqlg1.py
@@ -16874,6 +16953,7 @@ class TestMysqlg1Controller(TestController):
     def test_index(self):
         response = self.app.get(url(controller='mysqlg1', action='index'))
         # Test response...
+./pyfisheyes/tests/functional/test_mysqlg1.py
 
 ##########################################
 ####file_name: ./pyfisheyes/tests/functional/test_form.py
@@ -16885,6 +16965,7 @@ class TestFormController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='form', action='index'))
         # Test response...
+./pyfisheyes/tests/functional/test_form.py
 
 ##########################################
 ####file_name: ./pyfisheyes/tests/functional/test_list.py
@@ -16896,6 +16977,7 @@ class TestListController(TestController):
     def test_index(self):
         response = self.app.get(url(controller='list', action='index'))
         # Test response...
+./pyfisheyes/tests/functional/test_list.py
 
 ##########################################
 ####file_name: ./pyfisheyes/config/routing.py
@@ -16951,10 +17033,12 @@ def make_map(config):
     #map.connect('/{controller}/{action}/{dname}')
 
     return map
+./pyfisheyes/config/routing.py
 
 ##########################################
 ####file_name: ./pyfisheyes/config/__init__.py
 ##########################################
+./pyfisheyes/config/__init__.py
 
 ##########################################
 ####file_name: ./pyfisheyes/config/middleware.py
@@ -17032,6 +17116,7 @@ def make_app(global_conf, full_stack=True, static_files=True, **app_conf):
         app = Cascade([static_app, app])
     app.config = config
     return app
+./pyfisheyes/config/middleware.py
 
 ##########################################
 ####file_name: ./pyfisheyes/config/environment.py
@@ -17094,6 +17179,7 @@ def load_environment(global_conf, app_conf):
     # any Pylons config options)
     
     return config
+./pyfisheyes/config/environment.py
 
 ##########################################
 ####file_name: ./pyfisheyes/jobs/alter_message.py
@@ -17286,6 +17372,7 @@ if __name__ == "__main__":
             lookup_system()
         if flags['action'] == 'mail':
             send_mail()
+./pyfisheyes/jobs/alter_message.py
 
 ##########################################
 ####file_name: ./pyfisheyes/jobs/daily_report.py
@@ -17508,6 +17595,7 @@ if __name__ == "__main__":
             lookup_system()
         if flags['action'] == 'mail':
             send_mail()
+./pyfisheyes/jobs/daily_report.py
 
 ##########################################
 ####file_name: ./pyfisheyes/jobs/graphs_job.py
@@ -17669,6 +17757,7 @@ if __name__ == "__main__":
             except:
                 print "Fail"
     
+./pyfisheyes/jobs/graphs_job.py
 
 ##########################################
 ####file_name: ./pyfisheyes/websetup.py
@@ -17688,6 +17777,7 @@ def setup_app(command, conf, vars):
 
     # Create the tables if they don't already exist
     Base.metadata.create_all(bind=Session.bind)
+./pyfisheyes/websetup.py
 
 ##########################################
 ####file_name: ./setup.py
@@ -17758,3 +17848,4 @@ setup(
     },
 
 )
+./setup.py
